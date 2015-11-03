@@ -426,12 +426,21 @@ local int outf(void *how, unsigned char *buf, unsigned len)
     return fwrite(buf, 1, len, (FILE *)how) != len;
 }
 
+void help(char* prog_name){
+    fprintf(stderr, "Syntax error!\n");
+    fprintf(stderr, "\tUsage: %s input.dbc output.dbf\n", prog_name);
+}
+
 /* Decompress a PKWare Compression Library stream from stdin to stdout */
 int main(int argc, char **argv)
 {
     int ret, n, header = 0, read=0, err = 0;
     static unsigned char hold[CHUNK];
 
+    if(argc != 3){
+        help(argv[0]);
+        exit(1);
+    }
     FILE* input = fopen(argv[1], "rb");
     FILE* output = fopen(argv[2], "wb");
     
