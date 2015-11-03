@@ -1,5 +1,5 @@
-dbc2dbf: blast.c blast.h
-	cc -DTEST -static -o dbc2dbf blast.c
+blast: blast.c blast.h
+	cc -DTEST -o blast blast.c
 
 test: blast
 	blast < test.pk | cmp - test.txt
