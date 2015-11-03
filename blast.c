@@ -435,7 +435,7 @@ int main(int argc, char **argv)
     FILE* input = fopen(argv[1], "rb");
     FILE* output = fopen(argv[2], "wb");
     
-    read = fseek(input, 8, SEEK_SET);
+/*    read = fseek(input, 8, SEEK_SET);
     err = ferror(input);
     read = fread(&header, 2, 1, input);
     err = ferror(input);
@@ -452,7 +452,7 @@ int main(int argc, char **argv)
     
     read = fseek(input, header + 4, SEEK_SET);
     err = ferror(input);    
-    
+  */  
 //    exit(0);
     
     /* decompress to stdout */
