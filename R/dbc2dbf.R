@@ -22,6 +22,7 @@
 #' @param output.file The output file name (including extension)
 #' @keywords dbc dbf
 #' @export
+#' @useDynLib read.dbc
 #' @examples
 #' dbc2dbf("mydata.dbc","mydata.dbf")
 
