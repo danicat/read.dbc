@@ -29,7 +29,6 @@
 #include <setjmp.h>             /* for setjmp(), longjmp(), and jmp_buf */
 #include "blast.h"              /* prototype for blast() */
 
-#define local static            /* for local function definitions */
 #define MAXBITS 13              /* maximum code length */
 #define MAXWIN 4096             /* maximum window size */
 
@@ -65,7 +64,7 @@ struct state {
  *   buffer, using shift right, and new bytes are appended to the top of the
  *   bit buffer, using shift left.
  */
-local int bits(struct state *s, int need)
+static int bits(struct state *s, int need)
 {
     int val;            /* bit accumulator */
 
@@ -122,7 +121,7 @@ struct huffman {
  *   this ordering, the bits pulled during decoding are inverted to apply the
  *   more "natural" ordering starting with all zeros and incrementing.
  */
-local int decode(struct state *s, struct huffman *h)
+static int decode(struct state *s, struct huffman *h)
 {
     int len;            /* current number of bits in code */
     int code;           /* len bits being decoded */
@@ -184,7 +183,7 @@ local int decode(struct state *s, struct huffman *h)
  * it is possible for decode() using that table to return an error for received
  * codes past the end of the incomplete lengths.
  */
-local int construct(struct huffman *h, const unsigned char *rep, int n)
+static int construct(struct huffman *h, const unsigned char *rep, int n)
 {
     int symbol;         /* current symbol when stepping through length[] */
     int len;            /* current length when stepping through h->count[] */
@@ -275,7 +274,7 @@ local int construct(struct huffman *h, const unsigned char *rep, int n)
  *   ignoring whether the length is greater than the distance or not implements
  *   this correctly.
  */
-local int decomp(struct state *s)
+static int decomp(struct state *s)
 {
     int lit;            /* true if literals are coded */
     int dict;           /* log2(dictionary size) - 6 */
@@ -405,78 +404,3 @@ int blast(blast_in infun, void *inhow, blast_out outfun, void *outhow)
         err = 1;
     return err;
 }
-
-#ifdef TEST
-/* Example of how to use blast() */
-#include <stdio.h>
-#include <stdlib.h>
-
-#define CHUNK 2048
-
-local unsigned inf(void *how, unsigned char **buf)
-{
-    static unsigned char hold[CHUNK];
-
-    *buf = hold;
-    return fread(hold, 1, CHUNK, (FILE *)how);
-}
-
-local int outf(void *how, unsigned char *buf, unsigned len)
-{
-    return fwrite(buf, 1, len, (FILE *)how) != len;
-}
-
-void help(char* prog_name){
-    fprintf(stderr, "Syntax error!\n");
-    fprintf(stderr, "\tUsage: %s input.dbc output.dbf\n", prog_name);
-}
-
-/* Decompress a PKWare Compression Library stream from stdin to stdout */
-int main(int argc, char **argv)
-{
-    int ret, n, header = 0, read=0, err = 0;
-    static unsigned char hold[CHUNK];
-
-    if(argc != 3){
-        help(argv[0]);
-        exit(1);
-    }
-    FILE* input = fopen(argv[1], "rb");
-    FILE* output = fopen(argv[2], "wb");
-    
-    read = fseek(input, 8, SEEK_SET);
-    err = ferror(input);
-    read = fread(&header, 2, 1, input);
-    err = ferror(input);
-    
-    //printf("header size=%d", header);
-    
-    read = fseek(input, 0, SEEK_SET);
-    err = ferror(input);
-    unsigned char buf[header];
-    read = fread(buf, 1, header, input);
-    err = ferror(input);
-    read = fwrite(buf, 1, header, output);
-    err = ferror(output);
-    
-    read = fseek(input, header + 4, SEEK_SET);
-    err = ferror(input);    
-    
-//    exit(0);
-    
-    /* decompress to stdout */
-    ret = blast(inf, input, outf, output);
-    if (ret != 0) fprintf(stderr, "blast error: %d\n", ret);
-
-    /* see if there are any leftover bytes */
-    n = 0;
-    while (fgetc(input) != EOF) n++;
-    if (n) fprintf(stderr, "blast warning: %d unused bytes of input\n", n);
-
-    fclose(input);
-    fclose(output);
-
-    /* return blast() error code */
-    return ret;
-}
-#endif
