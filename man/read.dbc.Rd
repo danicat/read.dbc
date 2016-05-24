@@ -10,9 +10,11 @@ read.dbc(filename, keep.dbf = FALSE, ...)
 \item{filename}{The name of the .dbc file (including extension)}
 
 \item{keep.dbf}{Keeps the temporary .dbf file instead of deleting it (Defaults to FALSE)}
+
+\item{...}{Further arguments to be passed to read.dbf}
 }
 \description{
-This function allows you read a .dbc (compressed .dbf) file into a data frame.
+This function allows you to read a .dbc (compressed .dbf) file into a data frame.
 }
 \examples{
 df <- read.dbc("mydata.dbc")

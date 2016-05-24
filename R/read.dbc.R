@@ -17,9 +17,10 @@
 
 #' Read a .dbc File
 #'
-#' This function allows you read a .dbc (compressed .dbf) file into a data frame.
+#' This function allows you to read a .dbc (compressed .dbf) file into a data frame.
 #' @param filename The name of the .dbc file (including extension)
 #' @param keep.dbf Keeps the temporary .dbf file instead of deleting it (Defaults to FALSE)
+#' @param ... Further arguments to be passed to read.dbf
 #' @keywords dbc
 #' @export
 #' @examples
