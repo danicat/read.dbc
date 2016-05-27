@@ -6,28 +6,31 @@ May, 22nd 2016
 
 ## Introduction
 
-`read.dbc` is a R package to enable importing data from `.dbc` files (which are actually compressed `.dbf` files).  
+`read.dbc` is a R package to enable importing data from `DBC` files. DBC is the extension for compressed DBF files (from the 'XBASE' family of databases).
 
-It is based on the work of [Mark Adler](mailto:madler@alumni.caltech.edu) (blast decompressor) and [Pablo Fonseca](https://github.com/eaglebh/blast-dbf) (blast-dbf).
+While it's not a very common format, the DBC file has extensive usage by the Brazilian government to publish Public Health data.
 
-This repo also includes the original C code forked from https://github.com/eaglebh/blast-dbf with some customizations. This code can be compiled as a standalone program or as a shared library. As a standalone program, it has a few improvements over the original code, like enabling shell/terminal redirections (which was broken in the original blast-dbf).  
+DATASUS is the name of the Department of Informatics of Brazilian Health System and is resposible for publishing those data. The Brazilian National Agency for Supplementary Health (ANS) also uses the DBC format for its public data.
 
-For a complete description of the changes, please check the [CHANGELOG.md](/CHANGELOG.md) file.
+This code was tested using files from both DATASUS and ANS to ensure compliance with the format, and hence ensure its usability by researchers.
+
+It is based on the work of [Mark Adler](https://github.com/madler/zlib/tree/master/contrib/blast) (blast) and [Pablo Fonseca](https://github.com/eaglebh/blast-dbf) (blast-dbf).
+
+## Changelog
+
+For a complete description of the changes, please check [CHANGELOG.md](/inst/CHANGELOG.md).
 
 ## Repository Contents
 
 - `README.md`: this file.  
-- `README.orig`: original README file from Mark Adler.  
 - `CHANGELOG.md`: change history.  
-- `Makefile`: define rules for building both standalone and shared library versions. (not necessary for R package usage)
 - `src/blast.c`: decompression tools for PKWare Data Compression Library (DCL).  
 - `src/blast.h`: `blast.c` header and usage notes.  
 - `src/dbc2dbf.c`: the main program to decompress the dbc files to dbf.  
 - `R/read.dbc.R`: the code for reading `.dbc` files within R.
 - `R/dbc2dbf.R`: a helper function to decompress the `.dbc` files, it works as a wrapper to the "blast" code.
 - `man/*`: package manuals
-- `tests/test.pk`: File compressed with DCL
-- `tests/test.txt`: Expected output from decompressing `test.pk`. Please note that this test is *currently broken*, since `test.pk` is not a `.dbc` file (it is missing the file header). I've kept this file from the original repo only for historic purposes.  
+- `files/*`: test files
 
 ## Installation
 
@@ -35,37 +38,36 @@ The easiest way to install this package is using the `devtools` library:
 
         devtools::install_github("danicat/read.dbc")
         
-### Standalone decompressor: dbc2dbf
-
-In order to install `dbc2dbf` as a standalone program you must compile it from the source. I've provided a `Makefile` for ease of usage. To compile it as a standalone program, you must run on the command line:  
-
-        cd [source-code-directory]
-        git clone --depth=1 https://github.com/danicat/read.dbc
-        cd read.dbc
-        make dbc2dbf
-
-It will create a executable file named `dbc2dbf` in the project directory.
-
-### Decompressor as a shared library: dbc2dbf.so
-
-If you want to compile dbc2dbf as a shared library instead, you must run on the command line:
-
-        cd [source-code-directory]
-        git clone --depth=1 https://github.com/danicat/read.dbc
-        cd read.dbc
-        make shared
-
-This will create a file named `dbc2dbf.so` in the project directory.
-
 ## Usage
 
-Reading a .dbc file to a data frame:
+Reading a DBC file to a data frame:
 
-        df <- read.dbc("mydata.dbc")
-        
-Decompressing a .dbc file to a .dbf:
+	# The 'sids.dbc' file is the compressed version of 'sids.dbf' from the "foreign" package.
+	x <- read.dbc(system.file("files/sids.dbc", package="read.dbc"))
+	str(x)
+	summary(x)
 
-        dbc2dbf("mydata.dbc","mydata.dbf")
+	# This is a small subset of U.S. National Oceanic and Atmospheric Administration’s (NOAA) storm database.
+	storm <- read.dbc(system.file("files/storm.dbc", package="read.dbc"))
+	head(x)
+	str(x)
+
+	## Note: Don't run!
+	## The following code downloads a file from the Brazilian's National Agency for Supplementary Health (ANS/DATASUS)
+	download.file("http://ans.gov.br/images/stories/Materiais_para_pesquisa/Perfil_setor/Dados_e_indicadores_do_setor/ans_tabnet/dados_dbc/operadoras/oper_com_registro_ativo/tb_opa_1603.dbc", destfile = "tb_opa_1603.dbc")
+	opa <- read.dbc("tb_opa_1603.dbc")
+	head(opa, n=2)
+	#   ID_CMPT CD_OPERADO MODALIDADE PORTE SG_UF LG_CAPITAL CD_RM ANO_REG OPS_ATV OPS_BEN
+	# 1  201603     339954         27    06    MG          0  3103    1998       1       1
+	# 2  201603     306347         26    03    CE          1  2301    1998       1       1
+
+     
+Decompressing a DBC file to a DBF:
+
+	# The call return logi = TRUE on success
+	if( dbc2dbf("files/sids.dbc","files/sids.dbf") ) {
+	     print("File decompressed!")
+	}
 
 ## Contact Info
 

@@ -2,22 +2,54 @@
 % Please edit documentation in R/read.dbc.R
 \name{read.dbc}
 \alias{read.dbc}
-\title{Read a .dbc File}
+\title{Read a DBC File}
 \usage{
-read.dbc(filename, keep.dbf = FALSE, ...)
+read.dbc(file, keep.dbf = FALSE, ...)
 }
 \arguments{
-\item{filename}{The name of the .dbc file (including extension)}
+\item{file}{The name of the DBC file (including extension)}
 
-\item{keep.dbf}{Keeps the temporary .dbf file instead of deleting it (Defaults to FALSE)}
+\item{keep.dbf}{Keeps the temporary DBF file instead of deleting it (Defaults to \code{FALSE})}
 
-\item{...}{Further arguments to be passed to read.dbf}
+\item{...}{Further arguments to be passed to \code{read.dbf}}
+}
+\value{
+A data.frame of the data from the DBC file.
 }
 \description{
-This function allows you to read a .dbc (compressed .dbf) file into a data frame.
+This function allows you to read a DBC (compressed DBF) file into a data frame.
+}
+\details{
+DBC is the extension for compressed DBF files (from the 'XBASE' family of databases). \code{read.dbc} relies on the \code{\link{dbc2dbf}} function to decompress the DBC into a DBF file.
+
+After decompressing, it reads the DBF file into a \code{data.frame} using \code{\link{read.dbf}} from the \code{foreign} package.
+
+By default, it deletes the DBF file after reading to preserve file system space, but this behaviour can be overriden with the parameter \code{keep.dbf = TRUE}.
+}
+\note{
+While it's not a very common format, the DBC file has extensive usage by the Brazilian government to publish Public Health data.
+
+DATASUS is the name of the Department of Informatics of Brazilian Health System and is resposible for publishing those data. The Brazilian National Agency for Supplementary Health (ANS) also uses the DBC format for its public data.
+
+This function was tested using files from both DATASUS and ANS to ensure compliance with the format, and hence ensure its usability by researchers.
 }
 \examples{
-df <- read.dbc("mydata.dbc")
+# The 'sids.dbc' file is the compressed version of 'sids.dbf' from the "foreign" package.
+x <- read.dbc(system.file("files/sids.dbc", package="read.dbc"))
+str(x)
+summary(x)
+
+# This is a small subset of U.S. NOAA storm database.
+storm <- read.dbc(system.file("files/storm.dbc", package="read.dbc"))
+head(x)
+str(x)
 }
+\author{
+Daniela Petruzalek, \email{daniela.petruzalek@gmail.com}
+}
+\seealso{
+\code{\link{dbc2dbf}}
+}
+\keyword{datasus}
 \keyword{dbc}
 

@@ -1,6 +1,12 @@
 ## CHANGELOG.md
 
-### Version 1.0: Packaged release
+### Version 1.0.1
+- Documentation cleanup
+- Added test files sids.dbc and storm.dbc
+- Separation of code from the command-line decompressor blast-dbf to avoid conditional compilation
+- Removed unused files
+
+### Version 1.0.0: Packaged release
 - Project was converted into a R package
 - Now it can be installed with devtools::install_github("danicat/read.dbc")
 - Added documentation
