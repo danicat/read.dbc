@@ -30,7 +30,7 @@ For a complete description of the changes, please check [CHANGELOG.md](/inst/CHA
 - `R/read.dbc.R`: the code for reading `.dbc` files within R.
 - `R/dbc2dbf.R`: a helper function to decompress the `.dbc` files, it works as a wrapper to the "blast" code.
 - `man/*`: package manuals
-- `files/*`: test files
+- `inst/*`: test and misc files
 
 ## Installation
 
@@ -52,22 +52,27 @@ Reading a DBC file to a data frame:
 	head(x)
 	str(x)
 
-	## Note: Don't run!
-	## The following code downloads a file from the Brazilian's National Agency for Supplementary Health (ANS/DATASUS)
-	download.file("http://ans.gov.br/images/stories/Materiais_para_pesquisa/Perfil_setor/Dados_e_indicadores_do_setor/ans_tabnet/dados_dbc/operadoras/oper_com_registro_ativo/tb_opa_1603.dbc", destfile = "tb_opa_1603.dbc")
-	opa <- read.dbc("tb_opa_1603.dbc")
-	head(opa, n=2)
-	#   ID_CMPT CD_OPERADO MODALIDADE PORTE SG_UF LG_CAPITAL CD_RM ANO_REG OPS_ATV OPS_BEN
-	# 1  201603     339954         27    06    MG          0  3103    1998       1       1
-	# 2  201603     306347         26    03    CE          1  2301    1998       1       1
+        ## Don't run!
+        ## The following code will download data from the "Declarations of Death" database for
+        ## the Brazilian state of Parana, year 2013. Source: DATASUS / Brazilian Ministry of Health
+        url <- "ftp://ftp.datasus.gov.br/dissemin/publicos/SIM/CID10/DORES/DOPR2013.dbc"
+        download.file(url, destfile = "DOPR2013.dbc")
+        dopr <- read.dbc("DOPR2013.dbc")
+        head(dopr)
+        str(dopr)
 
-     
 Decompressing a DBC file to a DBF:
 
-	# The call return logi = TRUE on success
-	if( dbc2dbf("files/sids.dbc","files/sids.dbf") ) {
-	     print("File decompressed!")
-	}
+        # Input file name
+        in.f  <- system.file("files/sids.dbc", package = "read.dbc")
+        
+        # Output file name
+        out.f <- paste(strsplit(in.f, ".")[1], "dbf", sep = ".")
+        
+        # The call return logi = TRUE on success
+        if( dbc2dbf(input.file = in.f, output.file = out.f) ) {
+             print("File decompressed!")
+        }
 
 ## Contact Info
 

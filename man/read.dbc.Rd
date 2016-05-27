@@ -43,6 +43,17 @@ summary(x)
 storm <- read.dbc(system.file("files/storm.dbc", package="read.dbc"))
 head(x)
 str(x)
+
+\donttest{
+## Don't run!
+## The following code will download data from the "Declarations of Death" database for
+## the Brazilian state of Parana, year 2013. Source: DATASUS / Brazilian Ministry of Health
+url <- "ftp://ftp.datasus.gov.br/dissemin/publicos/SIM/CID10/DORES/DOPR2013.dbc"
+download.file(url, destfile = "DOPR2013.dbc")
+dopr <- read.dbc("DOPR2013.dbc")
+head(dopr)
+str(dopr)
+}
 }
 \author{
 Daniela Petruzalek, \email{daniela.petruzalek@gmail.com}
