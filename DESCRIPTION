@@ -1,7 +1,6 @@
 Package: read.dbc
 Title: Read Data Stored in DBC Files
 Description: Functions for reading and decompressing DBC files.
-    files.
 Version: 1.0.2
 Depends:
     R (>= 3.3.0)
