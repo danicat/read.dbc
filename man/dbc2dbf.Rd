@@ -28,11 +28,12 @@ DBC is the extension for compressed DBF files (from the 'XBASE' family of databa
 in.f  <- system.file("files/sids.dbc", package = "read.dbc")
 
 # Output file name
-out.f <- paste(strsplit(in.f, ".")[1], "dbf", sep = ".")
+out.f <- tempfile(fileext = ".dbc")
 
 # The call return logi = TRUE on success
 if( dbc2dbf(input.file = in.f, output.file = out.f) ) {
      print("File decompressed!")
+     file.remove(out.f)
 }
 
 }

@@ -1,5 +1,12 @@
 ## CHANGELOG.md
 
+### Version 1.0.2
+- Preparations for CRAN
+- Improved error handling in C code
+- Improved examples in documentation
+- Removed keep.dbf parameter from read.dbc. (useless?)
+- Fixed read.dbc to use tempfiles.
+
 ### Version 1.0.1
 - Documentation cleanup
 - Added test files sids.dbc and storm.dbc

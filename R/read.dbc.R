@@ -19,11 +19,10 @@
 #'
 #' This function allows you to read a DBC (compressed DBF) file into a data frame.
 #' @details
-#' DBC is the extension for compressed DBF files (from the 'XBASE' family of databases). \code{read.dbc} relies on the \code{\link{dbc2dbf}} function to decompress the DBC into a DBF file.
+#' DBC is the extension for compressed DBF files (from the 'XBASE' family of databases). \code{read.dbc} relies on the \code{\link{dbc2dbf}} function to decompress the DBC into a temporary DBF file.
 #'
-#' After decompressing, it reads the DBF file into a \code{data.frame} using \code{\link{read.dbf}} from the \code{foreign} package.
+#' After decompressing, it reads the temporary DBF file into a \code{data.frame} using \code{\link{read.dbf}} from the \code{foreign} package.
 #'
-#' By default, it deletes the DBF file after reading to preserve file system space, but this behaviour can be overriden with the parameter \code{keep.dbf = TRUE}.
 #' @note
 #' While it's not a very common format, the DBC file has extensive usage by the Brazilian government to publish Public Health data.
 #'
@@ -31,8 +30,7 @@
 #'
 #' This function was tested using files from both DATASUS and ANS to ensure compliance with the format, and hence ensure its usability by researchers.
 #' @param file The name of the DBC file (including extension)
-#' @param keep.dbf Keeps the temporary DBF file instead of deleting it (Defaults to \code{FALSE})
-#' @param ... Further arguments to be passed to \code{read.dbf}
+#' @param ... Further arguments to be passed to \code{\link{read.dbf}}
 #' @return A data.frame of the data from the DBC file.
 #' @keywords dbc datasus
 #' @export
@@ -48,7 +46,7 @@
 #' storm <- read.dbc(system.file("files/storm.dbc", package="read.dbc"))
 #' head(x)
 #' str(x)
-#' 
+#'
 #' \donttest{
 #' ## Don't run!
 #' ## The following code will download data from the "Declarations of Death" database for
@@ -59,17 +57,17 @@
 #' head(dopr)
 #' str(dopr)
 #' }
-read.dbc <- function(file, keep.dbf = FALSE, ...) {
+read.dbc <- function(file, ...) {
         # Output file name
-        out <- paste(strsplit(file, ".")[1], "dbf", sep = ".")
+        out <- tempfile(fileext = ".dbf")
 
         # Decompress the dbc file using the blast library wrapper.
         if( dbc2dbf(file, out) ) {
                 # Use read.dbf from foreing package to read the uncompressed file
                 df <- foreign::read.dbf(out, ...)
 
-                # By default, remove the uncompressed file
-                if( !keep.dbf ) file.remove(out)
+                # Delete temp file
+                file.remove(out)
 
                 # Return data frame
                 return(df)

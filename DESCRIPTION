@@ -2,13 +2,15 @@ Package: read.dbc
 Title: Read Data Stored in DBC Files
 Description: Functions for reading and decompressing DBC files.
     files.
-Version: 1.0.1
+Version: 1.0.2
 Depends:
     R (>= 3.3.0)
 Imports:
     foreign
 Authors@R: person("Daniela", "Petruzalek", email = "daniela.petruzalek@gmail.com", role = c("aut", "cre"))
 Maintainer: Daniela Petruzalek <daniela.petruzalek@gmail.com>
+URL: https://github.com/danicat/read.dbc
+BugReports: https://github.com/danicat/read.dbc/issues
 Copyright: 2016 Daniela Petruzalek
 License: AGPL-3
 Encoding: UTF-8

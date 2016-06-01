@@ -15,7 +15,7 @@
 
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-  
+
 */
 
 /*
@@ -23,13 +23,15 @@
     ============
 
     This program decompresses .dbc files to .dbf. This code is based on the work
-    of Mark Adler <madler@alumni.caltech.edu> (zlib/blast) and Pablo Fonseca 
+    of Mark Adler <madler@alumni.caltech.edu> (zlib/blast) and Pablo Fonseca
     (https://github.com/eaglebh/blast-dbf).
 */
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <errno.h>
+#include <string.h>
 #include <R.h>
 
 #include "blast.h"
@@ -51,7 +53,7 @@ static int outf(void *how, unsigned char *buf, unsigned len)
     return fwrite(buf, 1, len, (FILE *)how) != len;
 }
 
-/*  
+/*
     dbc2dbf(char** input_file, char** output_file)
     This function decompresses a given .dbc input file into the corresponding .dbf.
 
@@ -59,37 +61,64 @@ static int outf(void *how, unsigned char *buf, unsigned len)
  */
 void dbc2dbf(char** input_file, char** output_file) {
     FILE    *input, *output;
-    int     read, err, header, ret, n;
+    int     header, ret;
 
-    /* Open file descriptors */
+    /* Open input file */
     input  = fopen(input_file[0], "rb");
+    if(input == NULL) {
+        error("Error reading input file %s: %s", input_file[0], strerror(errno));
+        return;
+    }
+
+    /* Open output file */
     output = fopen(output_file[0], "wb");
+    if(output == NULL) {
+        error("Error reading output file %s: %s", output_file[0], strerror(errno));
+        return;
+    }
 
-    /* Process file header */
-    read = fseek(input, 8, SEEK_SET);
-    err = ferror(input);
-    read = fread(&header, 2, 1, input);
-    err = ferror(input);
+    /* Process file header - skip 8 bytes */
+    if( fseek(input, 8, SEEK_SET) ) {
+        error("Error processing input file %s: %s", input_file[0], strerror(errno));
+        return;
+    }
 
-    read = fseek(input, 0, SEEK_SET);
-    err = ferror(input);
+    /* Reads two bytes from the header = header size */
+    ret = fread(&header, 2, 1, input);
+    if( ferror(input) ) {
+        error("Error reading input file %s: %s", input_file[0], strerror(errno));
+        return;
+    }
+
+    /* Reset file pointer */
+    rewind(input);
 
     /* Copy file header from input to output */
     unsigned char buf[header];
-    read = fread(buf, 1, header, input);
-    err = ferror(input);
-    read = fwrite(buf, 1, header, output);
-    err = ferror(output);
+    ret = fread(buf, 1, header, input);
+    if( ferror(input) ) {
+        error("Error reading input file %s: %s", input_file[0], strerror(errno));
+        return;
+    }
 
-    read = fseek(input, header + 4, SEEK_SET);
-    err = ferror(input);
+    ret = fwrite(buf, 1, header, output);
+    if( ferror(output) ) {
+        error("Error writing output file %s: %s", output_file[0], strerror(errno));
+        return;
+    }
+
+    /* Jump to the data */
+    if( fseek(input, header + 4, SEEK_SET) ) {
+        error("Error processing input file %s: %s", input_file[0], strerror(errno));
+        return;
+    }
 
     /* decompress */
     ret = blast(inf, input, outf, output);
     if( ret ) error("blast error code: %d", ret);
 
     /* see if there are any leftover bytes */
-    n = 0;
+    int n = 0;
     while (fgetc(input) != EOF) n++;
     if (n) error("blast warning: %d unused bytes of input\n", n);
 

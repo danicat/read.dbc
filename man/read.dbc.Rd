@@ -4,14 +4,12 @@
 \alias{read.dbc}
 \title{Read a DBC File}
 \usage{
-read.dbc(file, keep.dbf = FALSE, ...)
+read.dbc(file, ...)
 }
 \arguments{
 \item{file}{The name of the DBC file (including extension)}
 
-\item{keep.dbf}{Keeps the temporary DBF file instead of deleting it (Defaults to \code{FALSE})}
-
-\item{...}{Further arguments to be passed to \code{read.dbf}}
+\item{...}{Further arguments to be passed to \code{\link{read.dbf}}}
 }
 \value{
 A data.frame of the data from the DBC file.
@@ -20,11 +18,9 @@ A data.frame of the data from the DBC file.
 This function allows you to read a DBC (compressed DBF) file into a data frame.
 }
 \details{
-DBC is the extension for compressed DBF files (from the 'XBASE' family of databases). \code{read.dbc} relies on the \code{\link{dbc2dbf}} function to decompress the DBC into a DBF file.
+DBC is the extension for compressed DBF files (from the 'XBASE' family of databases). \code{read.dbc} relies on the \code{\link{dbc2dbf}} function to decompress the DBC into a temporary DBF file.
 
-After decompressing, it reads the DBF file into a \code{data.frame} using \code{\link{read.dbf}} from the \code{foreign} package.
-
-By default, it deletes the DBF file after reading to preserve file system space, but this behaviour can be overriden with the parameter \code{keep.dbf = TRUE}.
+After decompressing, it reads the temporary DBF file into a \code{data.frame} using \code{\link{read.dbf}} from the \code{foreign} package.
 }
 \note{
 While it's not a very common format, the DBC file has extensive usage by the Brazilian government to publish Public Health data.
