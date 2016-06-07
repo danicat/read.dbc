@@ -1,7 +1,7 @@
 Package: read.dbc
-Title: Read Data Stored in DBC Files
-Description: Functions for reading and decompressing DBC files.
-Version: 1.0.2
+Title: Read Data Stored in DBC (compressed DBF) Files
+Description: Functions for reading and decompressing the DBC (compressed DBF) files used by DATASUS. Please note that this DBC file format is incompatible with Microsoft FoxPro or CANdb.
+Version: 1.0.3
 Depends:
     R (>= 3.3.0)
 Imports:

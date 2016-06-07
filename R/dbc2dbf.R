@@ -1,6 +1,5 @@
 # dbc2dbf.R
 # Copyright (C) 2016 Daniela Petruzalek
-# Version 1.0, 22 May 2016
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published
@@ -15,14 +14,16 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#' Decompress a DBC file to DBF
+#' Decompress a DBC (compressed DBF) file
 #'
-#' This function allows you decompress a DBC file into its DBF counterpart.
+#' This function allows you decompress a DBC file into its DBF counterpart. Please note that this is the file format used by the Brazilian Ministry of Health (DATASUS), and it is not related to the FoxPro or CANdb DBC file formats.
 #' @param input.file The name of the DBC file (including extension)
 #' @param output.file The output file name (including extension)
 #' @return Return TRUE if succeded, FALSE otherwise.
 #' @details
-#' DBC is the extension for compressed DBF files (from the 'XBASE' family of databases). It uses internally the PKWare's Data Compression Library (DCL) "implode" compression algorithm.
+#' DBC is the extension for compressed DBF files (from the 'XBASE' family of databases). This is a proprietary file format used by the brazilian government to make available public healthcare datasets (by it's agency called DATASUS).
+#'
+#' It uses internally the PKWare's Data Compression Library (DCL) "implode" compression algorithm. When decompressed, it becomes a regular DBF file.
 #' @source
 #' The internal C code for \code{dbc2dbf} is based on \code{blast} decompressor and \code{blast-dbf} (see \emph{References}).
 #' @keywords dbc dbf
@@ -53,6 +54,6 @@
 dbc2dbf <- function(input.file, output.file) {
         if( !file.exists(input.file) )
                 stop("Input file does not exist.")
-        out <- .C("dbc2dbf", input = as.character(input.file), output = as.character(output.file))
+        out <- .C("dbc2dbf", input = as.character(path.expand(input.file)), output = as.character(output.file))
         file.exists(output.file)
 }

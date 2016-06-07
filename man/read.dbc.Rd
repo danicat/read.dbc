@@ -2,7 +2,7 @@
 % Please edit documentation in R/read.dbc.R
 \name{read.dbc}
 \alias{read.dbc}
-\title{Read a DBC File}
+\title{Read Data Stored in DBC (compressed DBF) Files}
 \usage{
 read.dbc(file, ...)
 }
@@ -15,19 +15,20 @@ read.dbc(file, ...)
 A data.frame of the data from the DBC file.
 }
 \description{
-This function allows you to read a DBC (compressed DBF) file into a data frame.
+This function allows you to read a DBC (compressed DBF) file into a data frame. Please note that this is the file format used by the Brazilian Ministry of Health (DATASUS), and it is not related to the FoxPro or CANdb DBC file formats.
 }
 \details{
-DBC is the extension for compressed DBF files (from the 'XBASE' family of databases). \code{read.dbc} relies on the \code{\link{dbc2dbf}} function to decompress the DBC into a temporary DBF file.
+DBC is the extension for compressed DBF files (from the 'XBASE' family of databases). This is a proprietary file format used by the brazilian government to make available public healthcare datasets (by it's agency called DATASUS).
+\code{read.dbc} relies on the \code{\link{dbc2dbf}} function to decompress the DBC into a temporary DBF file.
 
 After decompressing, it reads the temporary DBF file into a \code{data.frame} using \code{\link{read.dbf}} from the \code{foreign} package.
 }
 \note{
-While it's not a very common format, the DBC file has extensive usage by the Brazilian government to publish Public Health data.
-
-DATASUS is the name of the Department of Informatics of Brazilian Health System and is resposible for publishing those data. The Brazilian National Agency for Supplementary Health (ANS) also uses the DBC format for its public data.
+DATASUS is the name of the Department of Informatics of the Brazilian Health System and is resposible for publishing public healthcare data. Besides the DATASUS, the Brazilian National Agency for Supplementary Health (ANS) also uses this file format for its public data.
 
 This function was tested using files from both DATASUS and ANS to ensure compliance with the format, and hence ensure its usability by researchers.
+
+As a final note, neither this project, nor its author, has any association with the brazilian government.
 }
 \examples{
 # The 'sids.dbc' file is the compressed version of 'sids.dbf' from the "foreign" package.

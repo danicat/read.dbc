@@ -2,7 +2,7 @@
 % Please edit documentation in R/dbc2dbf.R
 \name{dbc2dbf}
 \alias{dbc2dbf}
-\title{Decompress a DBC file to DBF}
+\title{Decompress a DBC (compressed DBF) file}
 \source{
 The internal C code for \code{dbc2dbf} is based on \code{blast} decompressor and \code{blast-dbf} (see \emph{References}).
 }
@@ -18,10 +18,12 @@ dbc2dbf(input.file, output.file)
 Return TRUE if succeded, FALSE otherwise.
 }
 \description{
-This function allows you decompress a DBC file into its DBF counterpart.
+This function allows you decompress a DBC file into its DBF counterpart. Please note that this is the file format used by the Brazilian Ministry of Health (DATASUS), and it is not related to the FoxPro or CANdb DBC file formats.
 }
 \details{
-DBC is the extension for compressed DBF files (from the 'XBASE' family of databases). It uses internally the PKWare's Data Compression Library (DCL) "implode" compression algorithm.
+DBC is the extension for compressed DBF files (from the 'XBASE' family of databases). This is a proprietary file format used by the brazilian government to make available public healthcare datasets (by it's agency called DATASUS).
+
+It uses internally the PKWare's Data Compression Library (DCL) "implode" compression algorithm. When decompressed, it becomes a regular DBF file.
 }
 \examples{
 # Input file name
