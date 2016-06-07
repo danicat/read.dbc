@@ -1,5 +1,10 @@
 ## CHANGELOG.md
 
+### Version 1.0.3
+- Cleanup of the manual - disambiguation of the file format
+- This DBC file is not compatible with FoxPro or CANdb
+- Added path expansion to handle '~' in file names
+
 ### Version 1.0.2
 - Preparations for CRAN
 - Improved error handling in C code

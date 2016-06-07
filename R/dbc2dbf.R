@@ -54,6 +54,6 @@
 dbc2dbf <- function(input.file, output.file) {
         if( !file.exists(input.file) )
                 stop("Input file does not exist.")
-        out <- .C("dbc2dbf", input = as.character(path.expand(input.file)), output = as.character(output.file))
+        out <- .C("dbc2dbf", input = as.character(path.expand(input.file)), output = as.character(path.expand(output.file)))
         file.exists(output.file)
 }

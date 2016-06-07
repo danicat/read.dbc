@@ -2,19 +2,19 @@
 
 Written by Daniela Petruzalek  
 e-mail: daniela.petruzalek@gmail.com  
-May, 22nd 2016
+First published in May, 22nd 2016
 
 ## Introduction
 
-`read.dbc` is a R package to enable importing data from `DBC` files. DBC is the extension for compressed DBF files (from the 'XBASE' family of databases).
+`read.dbc` is a R package to enable importing data from `DBC` (compressed `DBF`) files into data frames. Please note that this is the file format used by the Brazilian Ministry of Health (DATASUS), and it is not related to the Microsoft FoxPro or CANdb DBC file formats.
 
-While it's not a very common format, the DBC file has extensive usage by the Brazilian government to publish Public Health data.
-
-DATASUS is the name of the Department of Informatics of Brazilian Health System and is resposible for publishing those data. The Brazilian National Agency for Supplementary Health (ANS) also uses the DBC format for its public data.
+DATASUS is the name of the Department of Informatics of Brazilian Health System. It is the agency resposible for publishing Brazilian public healthcare data. Besides DATASUS, the Brazilian National Agency for Supplementary Health (ANS) also uses this file format for its public data.
 
 This code was tested using files from both DATASUS and ANS to ensure compliance with the format, and hence ensure its usability by researchers.
 
-It is based on the work of [Mark Adler](https://github.com/madler/zlib/tree/master/contrib/blast) (blast) and [Pablo Fonseca](https://github.com/eaglebh/blast-dbf) (blast-dbf).
+This project is based on the work of [Mark Adler](https://github.com/madler/zlib/tree/master/contrib/blast) (blast) and [Pablo Fonseca](https://github.com/eaglebh/blast-dbf) (blast-dbf).
+
+As a final note, neither this project, nor its author, is related in any way to the Brazilian government.
 
 ## Changelog
 
