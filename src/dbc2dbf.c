@@ -32,6 +32,7 @@
 #include <unistd.h>
 #include <errno.h>
 #include <string.h>
+#include <stdint.h>
 #include <R.h>
 
 #include "blast.h"
@@ -60,8 +61,10 @@ static int outf(void *how, unsigned char *buf, unsigned len)
     Please provide fully qualified names, including file extension.
  */
 void dbc2dbf(char** input_file, char** output_file) {
-    FILE    *input, *output;
-    int     header, ret;
+    FILE          *input = 0, *output = 0;
+    int           ret = 0;
+    unsigned char rawHeader[2];
+    uint16_t      header = 0;
 
     /* Open input file */
     input  = fopen(input_file[0], "rb");
@@ -84,17 +87,21 @@ void dbc2dbf(char** input_file, char** output_file) {
     }
 
     /* Reads two bytes from the header = header size */
-    ret = fread(&header, 2, 1, input);
+    ret = fread(rawHeader, 2, 1, input);
     if( ferror(input) ) {
         error("Error reading input file %s: %s", input_file[0], strerror(errno));
         return;
     }
 
+    /* Platform independent code (header is stored in little endian format) */
+    header = rawHeader[0] + (rawHeader[1] << 8);
+    
     /* Reset file pointer */
     rewind(input);
 
     /* Copy file header from input to output */
     unsigned char buf[header];
+
     ret = fread(buf, 1, header, input);
     if( ferror(input) ) {
         error("Error reading input file %s: %s", input_file[0], strerror(errno));
@@ -107,7 +114,7 @@ void dbc2dbf(char** input_file, char** output_file) {
         return;
     }
 
-    /* Jump to the data */
+    /* Jump to the data (Skip CRC32) */
     if( fseek(input, header + 4, SEEK_SET) ) {
         error("Error processing input file %s: %s", input_file[0], strerror(errno));
         return;

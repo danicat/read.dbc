@@ -1,5 +1,9 @@
 ## CHANGELOG.md
 
+### Version 1.0.4
+- Fixed BUG on the Solaris port
+- Small code cleanups
+
 ### Version 1.0.3
 - Cleanup of the manual - disambiguation of the file format
 - This DBC file is not compatible with FoxPro or CANdb
