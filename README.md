@@ -34,7 +34,7 @@ For a complete description of the changes, please check [CHANGELOG.md](/inst/CHA
 
 ## Installation
 
-As of June, 7 of 2016, this package officialy became part of [CRAN](https://cran.r-project.org/web/packages/read.dbc/index.html) (The Comprehensive R Archive Network). Therefore, it's current stable version can be installed by running `install.packages`:
+As of June, 7 of 2016, this package officialy became part of [CRAN](https://cran.r-project.org/package=read.dbc) (The Comprehensive R Archive Network). Therefore, it's current stable version can be installed by running `install.packages`:
 
         install.packages("read.dbc")
 
