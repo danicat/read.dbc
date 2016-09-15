@@ -1,21 +1,18 @@
 /* dbc2dbf.c
+   Copyright (C) 2016 Daniela Petruzalek
 
-    Copyright (C) 2016 Daniela Petruzalek
-    Version 1.0, 22 May 2016
+   This program is free software: you can redistribute it and/or modify
+   it under the terms of the GNU Affero General Public License as published
+   by the Free Software Foundation, either version 3 of the License, or
+   (at your option) any later version.
 
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU Affero General Public License as published
-    by the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
+   This program is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU Affero General Public License for more details.
 
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU Affero General Public License for more details.
-
-    You should have received a copy of the GNU Affero General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
+   You should have received a copy of the GNU Affero General Public License
+   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 /*
@@ -54,6 +51,13 @@ static int outf(void *how, unsigned char *buf, unsigned len)
     return fwrite(buf, 1, len, (FILE *)how) != len;
 }
 
+
+/* Close open files before exit */
+void cleanup(FILE* input, FILE* output) {
+    if( input  ) fclose(input);
+    if( output ) fclose(output);
+}
+
 /*
     dbc2dbf(char** input_file, char** output_file)
     This function decompresses a given .dbc input file into the corresponding .dbf.
@@ -70,27 +74,26 @@ void dbc2dbf(char** input_file, char** output_file) {
     input  = fopen(input_file[0], "rb");
     if(input == NULL) {
         error("Error reading input file %s: %s", input_file[0], strerror(errno));
-        return;
     }
 
     /* Open output file */
     output = fopen(output_file[0], "wb");
     if(output == NULL) {
+        cleanup(input, output);
         error("Error reading output file %s: %s", output_file[0], strerror(errno));
-        return;
     }
 
     /* Process file header - skip 8 bytes */
     if( fseek(input, 8, SEEK_SET) ) {
+        cleanup(input, output);
         error("Error processing input file %s: %s", input_file[0], strerror(errno));
-        return;
     }
 
     /* Reads two bytes from the header = header size */
     ret = fread(rawHeader, 2, 1, input);
     if( ferror(input) ) {
+        cleanup(input, output);
         error("Error reading input file %s: %s", input_file[0], strerror(errno));
-        return;
     }
 
     /* Platform independent code (header is stored in little endian format) */
@@ -104,31 +107,37 @@ void dbc2dbf(char** input_file, char** output_file) {
 
     ret = fread(buf, 1, header, input);
     if( ferror(input) ) {
+        cleanup(input, output);
         error("Error reading input file %s: %s", input_file[0], strerror(errno));
-        return;
     }
 
     ret = fwrite(buf, 1, header, output);
     if( ferror(output) ) {
+        cleanup(input, output);
         error("Error writing output file %s: %s", output_file[0], strerror(errno));
-        return;
     }
 
     /* Jump to the data (Skip CRC32) */
     if( fseek(input, header + 4, SEEK_SET) ) {
+        cleanup(input, output);
         error("Error processing input file %s: %s", input_file[0], strerror(errno));
-        return;
     }
 
     /* decompress */
     ret = blast(inf, input, outf, output);
-    if( ret ) error("blast error code: %d", ret);
+    if( ret ) {
+        cleanup(input, output);
+        error("Corrupted file? Blast error code: %d", ret);
+    }
 
     /* see if there are any leftover bytes */
     int n = 0;
     while (fgetc(input) != EOF) n++;
-    if (n) error("blast warning: %d unused bytes of input\n", n);
+    if (n) {
+        cleanup(input, output);
+        error("blast warning: %d unused bytes of input\n", n);
+    }
 
-    fclose(input);
-    fclose(output);
+    cleanup(input, output);
 }
+

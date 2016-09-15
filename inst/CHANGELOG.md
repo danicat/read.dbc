@@ -1,5 +1,8 @@
 ## CHANGELOG.md
 
+### Version 1.0.5
+- Fixed BUG that left files open on error (Issue #4)
+
 ### Version 1.0.4
 - Fixed BUG on the Solaris port
 - Small code cleanups
