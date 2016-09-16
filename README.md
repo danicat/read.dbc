@@ -1,8 +1,8 @@
 # read.dbc
 
-Written by Daniela Petruzalek  
+Author: Daniela Petruzalek  
 e-mail: daniela.petruzalek@gmail.com  
-First published in May, 22nd 2016
+License: AGPLv3
 
 ## Introduction
 
