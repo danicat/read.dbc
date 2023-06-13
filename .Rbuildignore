@@ -3,3 +3,5 @@
 .github
 .vscode
 Makefile
+^cran-comments\.md$
+^revdep$

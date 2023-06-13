@@ -75,7 +75,7 @@ Decompressing a DBC file to a DBF:
 
 ## Contact Info
 
-If you have any questions, please contact me at daniela.petruzalek@gmail.com. You may also follow me on [Twitter](http://www.twitter.com/danicat83).
+If you have any questions, please contact me at [daniela.petruzalek@gmail.com](mailto:daniela.petruzalek@gmail.com). You may also follow me on [Twitter](https://twitter.com/danicat83).
 
 ## Developer Information
 
@@ -100,3 +100,8 @@ devtools::check()
 The `Makefile` also contains a few helper methods.
 
 
+## Submitting to CRAN
+
+First make sure all the checks are passing. (TODO: build a GitHub Actions pipeline)
+
+Once ready, use `devtools::submit_cran()`.
