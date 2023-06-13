@@ -127,7 +127,7 @@ void dbc2dbf(char** input_file, char** output_file) {
     ret = blast(inf, input, outf, output);
     if( ret ) {
         cleanup(input, output);
-        error("Corrupted file? Blast error code: %d", ret);
+        error("error decompressing file: %d", ret);
     }
 
     /* see if there are any leftover bytes */

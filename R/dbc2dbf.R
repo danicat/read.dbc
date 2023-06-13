@@ -41,7 +41,7 @@
 #' # The call return logi = TRUE on success
 #' if( dbc2dbf(input.file = in.f, output.file = out.f) ) {
 #'      print("File decompressed!")
-#'      file.remove(out.f)
+#'      file.remove(out.f) # clean up example, don't do in real life :)
 #' }
 #'
 #' @references

@@ -2,7 +2,7 @@
 % Please edit documentation in R/read.dbc.R
 \name{read.dbc}
 \alias{read.dbc}
-\title{Read Data Stored in DBC (compressed DBF) Files}
+\title{Read Data Stored in DBC (Compressed DBF) Files}
 \usage{
 read.dbc(file, ...)
 }
@@ -32,32 +32,23 @@ As a final note, neither this project, nor its author, has any association with 
 }
 \examples{
 # The 'sids.dbc' file is the compressed version of 'sids.dbf' from the "foreign" package.
-x <- read.dbc(system.file("files/sids.dbc", package="read.dbc"))
-str(x)
-summary(x)
+file <- system.file("files/sids.dbc", package="read.dbc")
+sids <- read.dbc(file)
+str(sids)
+summary(sids)
 
 # This is a small subset of U.S. NOAA storm database.
-storm <- read.dbc(system.file("files/storm.dbc", package="read.dbc"))
-head(x)
-str(x)
+file <- system.file("files/storm.dbc", package="read.dbc")
+storm <- read.dbc(file)
+head(storm)
+str(storm)
 
-\donttest{
-## Don't run!
-## The following code will download data from the "Declarations of Death" database for
-## the Brazilian state of Parana, year 2013. Source: DATASUS / Brazilian Ministry of Health
-url <- "ftp://ftp.datasus.gov.br/dissemin/publicos/SIM/CID10/DORES/DOPR2013.dbc"
-download.file(url, destfile = "DOPR2013.dbc")
-dopr <- read.dbc("DOPR2013.dbc")
-head(dopr)
-str(dopr)
-}
-}
-\author{
-Daniela Petruzalek, \email{daniela.petruzalek@gmail.com}
 }
 \seealso{
 \code{\link{dbc2dbf}}
 }
+\author{
+Daniela Petruzalek, \email{daniela.petruzalek@gmail.com}
+}
 \keyword{datasus}
 \keyword{dbc}
-

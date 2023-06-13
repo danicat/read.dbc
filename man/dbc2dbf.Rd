@@ -35,12 +35,9 @@ out.f <- tempfile(fileext = ".dbc")
 # The call return logi = TRUE on success
 if( dbc2dbf(input.file = in.f, output.file = out.f) ) {
      print("File decompressed!")
-     file.remove(out.f)
+     file.remove(out.f) # clean up example, don't do in real life :)
 }
 
-}
-\author{
-Daniela Petruzalek, \email{daniela.petruzalek@gmail.com}
 }
 \references{
 The PKWare ZIP file format documentation (contains the "implode" algorithm specification) available at \url{https://support.pkware.com/display/PKZIP/APPNOTE}, current version \url{https://pkware.cachefly.net/webdocs/casestudies/APPNOTE.TXT}.
@@ -52,6 +49,8 @@ The PKWare ZIP file format documentation (contains the "implode" algorithm speci
 \seealso{
 \code{\link{read.dbc}}
 }
+\author{
+Daniela Petruzalek, \email{daniela.petruzalek@gmail.com}
+}
 \keyword{dbc}
 \keyword{dbf}
-
