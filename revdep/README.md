@@ -10,9 +10,9 @@
 |collate  |en_US.UTF-8                                |
 |ctype    |en_US.UTF-8                                |
 |tz       |Europe/London                              |
-|date     |2023-06-13                                 |
+|date     |2023-06-14                                 |
 |rstudio  |2023.06.0+421 Mountain Hydrangea (desktop) |
-|pandoc   |NA                                         |
+|pandoc   |3.1.3 @ /opt/homebrew/bin/pandoc           |
 
 # Dependencies
 

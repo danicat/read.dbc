@@ -1,5 +1,7 @@
 ## Release information
 
+Update: LICENSE file removed and DESCRIPTION updated
+
 This package was available on CRAN since 2016, but was removed from CRAN due to the following:
 
 'Packages which use Internet resources should fail gracefully with an informative message
@@ -9,9 +11,21 @@ This was flagged because I used `download.file` in one of my examples. This exam
 
 ## R CMD check results
 
-Duration: 6s
+Duration: 16.6s
 
-0 errors ✔ | 0 warnings ✔ | 0 notes ✔
+❯ checking CRAN incoming feasibility ... [2s/11s] NOTE
+  Maintainer: ‘Daniela Petruzalek <daniela.petruzalek@gmail.com>’
+  
+  New submission
+  
+  Package was archived on CRAN
+  
+  CRAN repository db overrides:
+    X-CRAN-Comment: Archived on 2023-04-07 for policy violation.
+  
+    On Internet access.
+
+0 errors ✔ | 0 warnings ✔ | 1 note ✖
 
 ## revdepcheck results
 

@@ -11,7 +11,7 @@ Maintainer: Daniela Petruzalek <daniela.petruzalek@gmail.com>
 URL: https://github.com/danicat/read.dbc
 BugReports: https://github.com/danicat/read.dbc/issues
 Copyright: 2016 Daniela Petruzalek
-License: AGPL-3 + file LICENSE
+License: AGPL-3
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.2.3
