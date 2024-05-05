@@ -45,7 +45,7 @@
 #' }
 #'
 #' @references
-#' The PKWare ZIP file format documentation (contains the "implode" algorithm specification) available at \url{https://support.pkware.com/display/PKZIP/APPNOTE}, current version \url{https://pkware.cachefly.net/webdocs/casestudies/APPNOTE.TXT}.
+#' The PKWare ZIP file format documentation (contains the "implode" algorithm specification) available at \url{https://pkware.cachefly.net/webdocs/casestudies/APPNOTE.TXT}.
 #'
 #' \code{blast} source code in C: \url{https://github.com/madler/zlib/tree/master/contrib/blast}
 #'

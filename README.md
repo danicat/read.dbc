@@ -75,7 +75,7 @@ Decompressing a DBC file to a DBF:
 
 ## Contact Info
 
-If you have any questions, please contact me at [daniela.petruzalek@gmail.com](mailto:daniela.petruzalek@gmail.com). You may also follow me on [Twitter](https://twitter.com/danicat83).
+If you have any questions, please contact me at [daniela.petruzalek@gmail.com](mailto:daniela.petruzalek@gmail.com).
 
 ## Developer Information
 

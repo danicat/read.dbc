@@ -1,5 +1,8 @@
+clean:
+	rm -rf revdep/*
+
 check:
-	Rscript -e "devtools::check(remote = TRUE, manual = TRUE)"
+	Rscript -e "devtools::check(remote = TRUE, manual = FALSE)"
 	Rscript -e "urlchecker::url_check()"
 
 wincheck:
@@ -19,3 +22,6 @@ setup:
 
 document:
 	Rscript -e "devtools::document()"
+
+submit:
+	Rscript -e "devtools::submit_cran()"
