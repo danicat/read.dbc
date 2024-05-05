@@ -1,3 +1,3 @@
-# read.dbc 1.0.6
+# read.dbc 1.0.7
 
-* Republished to CRAN after removing donwload.files reference in documentation.
+* Republished to CRAN after removing broken links.
