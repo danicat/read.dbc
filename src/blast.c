@@ -326,12 +326,20 @@ static int decomp(struct state *s)
         if (bits(s, 1)) {
             /* get length */
             symbol = decode(s, &lencode);
+            if (symbol < 0) {
+                return symbol;
+            }
+
             len = base[symbol] + bits(s, extra[symbol]);
             if (len == 519) break;              /* end code */
 
             /* get distance */
             symbol = len == 2 ? 2 : dict;
             dist = decode(s, &distcode) << symbol;
+            if (dist < 0) {
+                return dist;
+            }
+
             dist += bits(s, symbol);
             dist++;
             if (s->first && dist > s->next)
