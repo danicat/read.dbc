@@ -3,5 +3,4 @@
 .RData
 *.o
 *.so
-.github
 .vscode

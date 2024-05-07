@@ -1,3 +1,6 @@
+<!-- badges: start -->
+  [![R-CMD-check](https://github.com/danicat/read.dbc/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/danicat/read.dbc/actions/workflows/R-CMD-check.yaml)
+  <!-- badges: end -->
 # read.dbc
 
 Author: Daniela Petruzalek  
@@ -102,6 +105,6 @@ The `Makefile` also contains a few helper methods.
 
 ## Submitting to CRAN
 
-First make sure all the checks are passing. (TODO: build a GitHub Actions pipeline)
+First make sure all the checks are passing by running `make cran`.
 
 Once ready, use `devtools::submit_cran()`.
