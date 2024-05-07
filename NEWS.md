@@ -1,3 +1,4 @@
 # read.dbc 1.0.7
 
-* Republished to CRAN after removing broken links.
+* Removed broken links
+* Improved error handling in blast.c to prevent runtime errors (fixes gcc-UBSAN)

@@ -1,19 +1,13 @@
 ## Release information
 
-Update: LICENSE file removed and DESCRIPTION updated
-
-This package was available on CRAN since 2016, but was removed from CRAN due to the following:
-
-'Packages which use Internet resources should fail gracefully with an informative message
-if the resource is not available or has changed (and not give a check warning nor error).'
-
-This was flagged because I used `download.file` in one of my examples. This example has been removed from this version. I've also made changes to make it up to current standards, e.g., adding a NEWS.md file and this cran-comments.md file, and also running all standard checks.
+- Remove broken links from documentation
+- Improve error handling in blast.c to prevent runtime errors (fixes gcc-UBSAN issue)
 
 ## R CMD check results
 
-Duration: 16.6s
+Duration: 28s
 
-❯ checking CRAN incoming feasibility ... [2s/11s] NOTE
+❯ checking CRAN incoming feasibility ... [3s/18s] NOTE
   Maintainer: ‘Daniela Petruzalek <daniela.petruzalek@gmail.com>’
   
   New submission
@@ -21,11 +15,15 @@ Duration: 16.6s
   Package was archived on CRAN
   
   CRAN repository db overrides:
-    X-CRAN-Comment: Archived on 2023-04-07 for policy violation.
-  
-    On Internet access.
+    X-CRAN-Comment: Archived on 2023-11-20 as issues were not corrected
+      in time.
 
 0 errors ✔ | 0 warnings ✔ | 1 note ✖
+Rscript -e "urlchecker::url_check()"
+✔ All URLs are correct!
+Rscript -e "devtools::check_win_devel()"
+Building windows version of read.dbc (1.0.7)
+ℹ Using R-devel with win-builder.r-project.org.
 
 ## revdepcheck results
 

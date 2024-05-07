@@ -10,7 +10,7 @@
 |collate  |en_GB.UTF-8                       |
 |ctype    |en_GB.UTF-8                       |
 |tz       |Europe/London                     |
-|date     |2024-05-05                        |
+|date     |2024-05-07                        |
 |pandoc   |3.1.13 @ /opt/homebrew/bin/pandoc |
 
 # Dependencies
