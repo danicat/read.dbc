@@ -2,10 +2,10 @@
 
 |field    |value                             |
 |:--------|:---------------------------------|
-|version  |R version 4.3.0 (2023-04-21)      |
+|version  |R version 4.4.0 (2024-04-24)      |
 |os       |macOS Monterey 12.2.1             |
-|system   |aarch64, darwin20                 |
-|ui       |X11                               |
+|system   |aarch64, darwin21.6.0             |
+|ui       |unknown                           |
 |language |(EN)                              |
 |collate  |en_GB.UTF-8                       |
 |ctype    |en_GB.UTF-8                       |

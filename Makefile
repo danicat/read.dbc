@@ -21,10 +21,8 @@ check: # run CRAN checks
 wincheck: # run CRAN checks on Windows. Note: it uses a remote machine, check email for results
 	Rscript -e "devtools::check_win_devel()"
 
-.PHONY: revdepcheck
-revdepcheck: # reverse dependency checks
-	Rscript -e 'devtools::install_github("r-lib/revdepcheck")'
-	Rscript -e "usethis::use_revdep()"
+.PHONY: revdep
+revdep: # reverse dependency checks
 	Rscript -e "revdepcheck::revdep_check(num_workers = 4)"
 
 .PHONY: generate
@@ -35,6 +33,8 @@ generate: # generate C to R interface code
 setup: # install tools necessary for building the package
 	Rscript -e 'install.packages("devtools", repos="http://cran.us.r-project.org")'
 	Rscript -e 'install.packages("roxygen2", repos="http://cran.us.r-project.org")'
+	Rscript -e 'devtools::install_github("r-lib/revdepcheck")'
+	Rscript -e "usethis::use_revdep()"
 
 .PHONY: document
 document: # generate R docs from source code

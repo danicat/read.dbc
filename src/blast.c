@@ -26,6 +26,7 @@
  *                      - Fix comparisons of differently signed integers
  */
 
+#include <string.h>
 #include <setjmp.h>             /* for setjmp(), longjmp(), and jmp_buf */
 #include "blast.h"              /* prototype for blast() */
 
@@ -358,9 +359,9 @@ static int decomp(struct state *s)
                 if (copy > len) copy = len;
                 len -= copy;
                 s->next += copy;
-                do {
-                    *to++ = *from++;
-                } while (--copy);
+
+                memcpy(to, from, copy * sizeof(unsigned char));
+
                 if (s->next == MAXWIN) {
                     if (s->outfun(s->outhow, s->out, s->next)) return 1;
                     s->next = 0;
