@@ -45,7 +45,7 @@ help: # Show help for each of the Makefile recipes.
 	@grep -E '^[a-zA-Z0-9 -]+:.*#'  Makefile | sort | while read -r l; do printf "\033[1;32m$$(echo $$l | cut -f 1 -d':')\033[00m:$$(echo $$l | cut -f 2- -d'#')\n"; done
 
 .PHONY: cran
-cran: clean document check wincheck revdepcheck # prepare the package for CRAN release
+cran: clean document check revdep # prepare the package for CRAN release
 	@echo ======== BUILD COMPLETE ========
 	@echo
 	@echo New version is ready for publishing.
