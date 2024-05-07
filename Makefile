@@ -40,9 +40,13 @@ document:
 
 .PHONY: cran
 cran: clean document check wincheck revdepcheck
-	@echo Release checklist:
-	@echo - Update NEWS.md
+	@echo ======== BUILD COMPLETE ========
+	@echo
+	@echo New version is ready for publishing. Please check that the following tasks are completed before submitting to CRAN:
+	@echo - Update NEWS.md with changelog
 	@echo - Update cran-comments.md
 	@echo
 	@echo After the tasks above are completed, run the following command on the terminal to submit to CRAN:
-	@echo Rscript -e "devtools::submit_cran()"
+	@echo
+	@echo 	Rscript -e "devtools::submit_cran()"
+	@echo
