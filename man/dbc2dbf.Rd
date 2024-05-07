@@ -18,13 +18,14 @@ dbc2dbf(input.file, output.file)
 Return TRUE if succeed, FALSE otherwise.
 }
 \description{
-This function allows you decompress a DBC file.
-Please note that this is the file format used by the Brazilian Ministry of Health (DATASUS), and it is not related to the FoxPro or CANdb DBC file formats.
+This function allows you decompress a DBC file. When decompressed, it becomes a regular DBF file.
 }
 \details{
 DBC is the extension for compressed DBF files (from the 'XBASE' family of databases).
 This is a proprietary file format used by the Brazilian government to publish public healthcare data.
 When decompressed, it becomes a regular DBF file.
+
+Please note that this is the file format is not related to the FoxPro or CANdb DBC file formats.
 }
 \examples{
 # Input file name
