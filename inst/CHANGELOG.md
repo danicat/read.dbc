@@ -1,5 +1,13 @@
 ## CHANGELOG.md
 
+### Version 1.0.7
+
+* Removed broken links
+* Improved error handling in blast.c to prevent runtime errors (fixes gcc-UBSAN)
+* Update DESCRIPTION with collaborators
+* Documentation edits for conciseness
+* Overall doc improvements
+
 ### Version 1.0.5
 - Fixed BUG that left files open on error (Issue #4)
 

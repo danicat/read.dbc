@@ -7,3 +7,4 @@ Makefile
 ^revdep$
 ^CRAN-SUBMISSION$
 ^\.github$
+scripts

@@ -6,7 +6,11 @@ Depends:
     R (>= 3.3.0)
 Imports:
     foreign
-Authors@R: person("Daniela", "Petruzalek", email = "daniela.petruzalek@gmail.com", role = c("aut", "cre", "cph"))
+Authors@R: c(
+              person("Daniela", "Petruzalek", email = "daniela.petruzalek@gmail.com", role = c("aut", "cre", "cph")),
+              person("Mark", "Adler", email = "madler@alumni.caltech.edu", role = c("cph", "ctb")),
+              person("Pablo", "Marcondes Fonseca", email = "pablo.mmarcondes@gmail.com", role = c("cph", "ctb"))
+           )
 Maintainer: Daniela Petruzalek <daniela.petruzalek@gmail.com>
 URL: https://github.com/danicat/read.dbc
 BugReports: https://github.com/danicat/read.dbc/issues

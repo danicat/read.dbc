@@ -51,14 +51,15 @@ cran: clean document check revdep # prepare the package for CRAN release
 	@echo New version is ready for publishing.
 	@echo
 	@echo Please check that the following tasks are completed before submitting to CRAN:
-	@echo - Update NEWS.md with changelog
+	@echo - Update inst/CHANGELOG.md
+	@echo - Update NEWS.md
 	@echo - Update cran-comments.md
 	@echo
 	@echo After the tasks above are completed, run the following command on the terminal to submit to CRAN:
 	@echo
 	@echo Rscript -e '"'devtools::submit_cran"()"'"'
 	@echo
-	@echo Don"'"t forget to push the updated files to GitHub and tag the release as a release candidate. For example:
+	@echo After submitting, create a commit with the updated CRAN-SUBMISSION file and tag it as a release candidate:
 	@echo
 	@echo git tag 1.0.7-rc1 # create release candidate tag
 	@echo git push --tags   # publish remote tag

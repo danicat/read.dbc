@@ -9,15 +9,15 @@ License: AGPLv3
 
 ## Introduction
 
-`read.dbc` is a R package to enable importing data from `DBC` (compressed `DBF`) files into data frames. Please note that this is the file format used by the Brazilian Ministry of Health (DATASUS), and it is not related to the Microsoft FoxPro or CANdb DBC file formats.
+`read.dbc` is a R package to enable importing data from `DBC` (compressed `DBF`) files into data frames. Please note that this is the file format used by DATASUS and it is not related to Microsoft FoxPro or CANdb DBC file formats.
 
-DATASUS is the name of the Department of Informatics of Brazilian Health System. It is the agency resposible for publishing Brazilian public healthcare data. Besides DATASUS, the Brazilian National Agency for Supplementary Health (ANS) also uses this file format for its public data.
+DATASUS is the name of the Department of Informatics of Brazil's Healthcare System (Sistema Unico de Saúde - SUS). They are responsible for publishing Brazilian public healthcare data. Besides DATASUS, the Brazilian National Agency for Supplementary Health (ANS) also uses this file format for its public data.
 
 This code was tested using files from both DATASUS and ANS to ensure compliance with the format, and hence ensure its usability by researchers.
 
 This project is based on the work of [Mark Adler](https://github.com/madler/zlib/tree/master/contrib/blast) (blast) and [Pablo Fonseca](https://github.com/eaglebh/blast-dbf) (blast-dbf).
 
-As a final note, neither this project, nor its author, is related in any way to the Brazilian government.
+Neither this project, nor its author, is related in any way to the Brazilian government.
 
 ## Changelog
 
@@ -84,27 +84,17 @@ If you have any questions, please contact me at [daniela.petruzalek@gmail.com](m
 
 ### Mac OS X
 
-Install Xcode
-Install R: https://cran.r-project.org/bin/macosx/
-Install Rstudio: https://posit.co/download/rstudio-desktop/
+Setup:
+- Install Xcode
+- Install R: https://cran.r-project.org/bin/macosx/
+- Install Rstudio: https://posit.co/download/rstudio-desktop/
+- Run `make setup` to install R dependencies
+- Run `make check` to verify the package
 
-Open Rstudio and run on the console:
-```
-install.packages("devtools")
-install.packages("roxygen2")
-```
-
-To check the package is ok run:
-
-```
-devtools::check()
-```
-
-The `Makefile` also contains a few helper methods.
-
+You can also run `make help` to see a list of available commands.
 
 ## Submitting to CRAN
 
 First make sure all the checks are passing by running `make cran`.
 
-Once ready, use `devtools::submit_cran()`.
+Once ready, use `devtools::submit_cran()`. This needs to run from RStudio or the R interpreter itself as the tool doesn't allow non-interactive runs.

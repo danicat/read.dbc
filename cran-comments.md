@@ -1,7 +1,10 @@
 ## Release information
 
-- Remove broken links from documentation
-- Improve error handling in blast.c to prevent runtime errors (fixes gcc-UBSAN issue)
+* Removed broken links
+* Improved error handling in blast.c to prevent runtime errors (fixes gcc-UBSAN)
+* Update DESCRIPTION with collaborators
+* Documentation edits for conciseness
+* Overall doc improvements
 
 ## R CMD check results
 
