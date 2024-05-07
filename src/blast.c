@@ -360,7 +360,7 @@ static int decomp(struct state *s)
                 len -= copy;
                 s->next += copy;
 
-                memcpy(to, from, copy * sizeof(unsigned char));
+                memcpy(to, from, copy);
 
                 if (s->next == MAXWIN) {
                     if (s->outfun(s->outhow, s->out, s->next)) return 1;
