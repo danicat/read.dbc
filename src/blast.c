@@ -198,9 +198,11 @@ static int construct(struct huffman *h, const unsigned char *rep, int n)
         left = (len >> 4) + 1;
         len &= 15;
         do {
+            if (symbol >= 256)
+                break;
             length[symbol++] = len;
         } while (--left);
-    } while (--n);
+    } while (--n && symbol < 256);
     n = symbol;
 
     /* count number of codes of each length */
