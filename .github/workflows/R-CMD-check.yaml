@@ -56,7 +56,6 @@ jobs:
 
     env:
       _R_CHECK_ASAN_: true
-      ASAN_OPTIONS: detect_leaks=0
 
     steps:
       - uses: actions/checkout@v4
