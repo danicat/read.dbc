@@ -48,3 +48,38 @@ jobs:
         with:
           upload-snapshots: true
           build_args: 'c("--no-manual","--compact-vignettes=gs+qpdf")'
+
+  ASAN:
+    runs-on: ubuntu-latest
+    name: Ubuntu (release) with ASAN
+    strategy:
+      fail-fast: false
+    env:
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+      R_KEEP_PKG_SOURCE: yes
+      ASAN_OPTIONS: "detect_leaks=0"
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: r-lib/actions/setup-pandoc@v2
+
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: 'release'
+          use-public-rspm: true
+
+      - uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          extra-packages: any::rcmdcheck
+          needs: check
+
+      - name: Build with ASAN
+        run: make asan
+
+      - name: Run R CMD check
+        run: |
+          install.packages("remotes")
+          remotes::install_local(".")
+          rcmdcheck::rcmdcheck(args = c("--no-manual", "--as-cran"))
+        shell: Rscript {0}
