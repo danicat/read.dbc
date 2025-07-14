@@ -4,10 +4,6 @@ SRC=./src
 
 .PHONY: lib
 lib: clean # build the shared library version of dbc2dbf
-	R CMD SHLIB -o src/db2dbf.so src/*.c -fsanitize=undefined
-
-.PHONY: asan
-asan: clean # build the shared library with Address Sanitizer
 	R CMD SHLIB -o src/db2dbf.so src/*.c -fsanitize=address -fno-omit-frame-pointer
 
 .PHONY: clean
