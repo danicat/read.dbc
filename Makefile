@@ -4,7 +4,7 @@ SRC=./src
 
 .PHONY: lib
 lib: clean # build the shared library version of dbc2dbf
-	R CMD SHLIB -o src/db2dbf.so src/*.c -fsanitize=undefined
+	R CMD SHLIB -o src/db2dbf.so src/*.c -fsanitize=address,undefined
 
 .PHONY: clean
 clean: # clean generated files

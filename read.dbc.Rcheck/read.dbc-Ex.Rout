@@ -1,0 +1,172 @@
+
+R version 4.3.3 (2024-02-29) -- "Angel Food Cake"
+Copyright (C) 2024 The R Foundation for Statistical Computing
+Platform: x86_64-pc-linux-gnu (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> pkgname <- "read.dbc"
+> source(file.path(R.home("share"), "R", "examples-header.R"))
+> options(warn = 1)
+> base::assign(".ExTimings", "read.dbc-Ex.timings", pos = 'CheckExEnv')
+> base::cat("name\tuser\tsystem\telapsed\n", file=base::get(".ExTimings", pos = 'CheckExEnv'))
+> base::assign(".format_ptime",
++ function(x) {
++   if(!is.na(x[4L])) x[1L] <- x[1L] + x[4L]
++   if(!is.na(x[5L])) x[2L] <- x[2L] + x[5L]
++   options(OutDec = '.')
++   format(x[1L:3L], digits = 7L)
++ },
++ pos = 'CheckExEnv')
+>
+> ### * </HEADER>
+> library('read.dbc')
+>
+> base::assign(".oldSearch", base::search(), pos = 'CheckExEnv')
+> base::assign(".old_wd", base::getwd(), pos = 'CheckExEnv')
+> cleanEx()
+> nameEx("dbc2dbf")
+> ### * dbc2dbf
+>
+> flush(stderr()); flush(stdout())
+>
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+> ### Name: dbc2dbf
+> ### Title: Decompress a DBC file
+> ### Aliases: dbc2dbf
+> ### Keywords: dbc dbf
+>
+> ### ** Examples
+>
+> # Input file name
+> input  <- system.file("files/sids.dbc", package = "read.dbc")
+>
+> # Output file name
+> output <- tempfile(fileext = ".dbc")
+>
+> # The call returns TRUE on success
+> if( dbc2dbf(input.file = input, output.file = output) ) {
++      print("File decompressed!")
++      # do things with the file
++ }
+[1] "File decompressed!"
+>
+> file.remove(output) # clean up example, don't do in real life :)
+[1] TRUE
+>
+>
+>
+>
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("dbc2dbf", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
+> cleanEx()
+> nameEx("read.dbc")
+> ### * read.dbc
+>
+> flush(stderr()); flush(stdout())
+>
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+> ### Name: read.dbc
+> ### Title: Read Data Stored in DBC (Compressed DBF) Files
+> ### Aliases: read.dbc
+> ### Keywords: datasus dbc
+>
+> ### ** Examples
+>
+> # The 'sids.dbc' file is the compressed version of 'sids.dbf' from the "foreign" package.
+> file <- system.file("files/sids.dbc", package="read.dbc")
+> sids <- read.dbc(file)
+> str(sids)
+'data.frame':	100 obs. of  14 variables:
+ $ AREA     : num  0.114 0.061 0.143 0.07 0.153 0.097 0.062 0.091 0.118 0.124 ...
+ $ PERIMETER: num  1.44 1.23 1.63 2.97 2.21 ...
+ $ CNTY_    : int  1825 1827 1828 1831 1832 1833 1834 1835 1836 1837 ...
+ $ CNTY_ID  : int  1825 1827 1828 1831 1832 1833 1834 1835 1836 1837 ...
+ $ NAME     : Factor w/ 100 levels "Alamance","Alexander",..: 5 3 86 27 66 46 15 37 93 85 ...
+ $ FIPS     : Factor w/ 100 levels "37001","37003",..: 5 3 86 27 66 46 15 37 93 85 ...
+ $ FIPSNO   : int  37009 37005 37171 37053 37131 37091 37029 37073 37185 37169 ...
+ $ CRESS_ID : int  5 3 86 27 66 46 15 37 93 85 ...
+ $ BIR74    : num  1091 487 3188 508 1421 ...
+ $ SID74    : num  1 0 5 1 9 7 0 0 4 1 ...
+ $ NWBIR74  : num  10 10 208 123 1066 ...
+ $ BIR79    : num  1364 542 3616 830 1606 ...
+ $ SID79    : num  0 3 6 2 3 5 2 2 2 5 ...
+ $ NWBIR79  : num  19 12 260 145 1197 ...
+ - attr(*, "data_types")= chr [1:14] "N" "N" "N" "N" ...
+> summary(sids)
+      AREA          PERIMETER         CNTY_         CNTY_ID            NAME
+ Min.   :0.0420   Min.   :0.999   Min.   :1825   Min.   :1825   Alamance : 1
+ 1st Qu.:0.0910   1st Qu.:1.324   1st Qu.:1902   1st Qu.:1902   Alexander: 1
+ Median :0.1205   Median :1.609   Median :1982   Median :1982   Alleghany: 1
+ Mean   :0.1263   Mean   :1.673   Mean   :1986   Mean   :1986   Anson    : 1
+ 3rd Qu.:0.1542   3rd Qu.:1.859   3rd Qu.:2067   3rd Qu.:2067   Ashe     : 1
+ Max.   :0.2410   Max.   :3.640   Max.   :2241   Max.   :2241   Avery    : 1
+                                                                (Other)  :94
+      FIPS        FIPSNO         CRESS_ID          BIR74           SID74
+ 37001  : 1   Min.   :37001   Min.   :  1.00   Min.   :  248   Min.   : 0.00
+ 37003  : 1   1st Qu.:37050   1st Qu.: 25.75   1st Qu.: 1077   1st Qu.: 2.00
+ 37005  : 1   Median :37100   Median : 50.50   Median : 2180   Median : 4.00
+ 37007  : 1   Mean   :37100   Mean   : 50.50   Mean   : 3300   Mean   : 6.67
+ 37009  : 1   3rd Qu.:37150   3rd Qu.: 75.25   3rd Qu.: 3936   3rd Qu.: 8.25
+ 37011  : 1   Max.   :37199   Max.   :100.00   Max.   :21588   Max.   :44.00
+ (Other):94
+    NWBIR74           BIR79           SID79          NWBIR79
+ Min.   :   1.0   Min.   :  319   Min.   : 0.00   Min.   :    3.0
+ 1st Qu.: 190.0   1st Qu.: 1336   1st Qu.: 2.00   1st Qu.:  250.5
+ Median : 697.5   Median : 2636   Median : 5.00   Median :  874.5
+ Mean   :1050.8   Mean   : 4224   Mean   : 8.36   Mean   : 1352.8
+ 3rd Qu.:1168.5   3rd Qu.: 4889   3rd Qu.:10.25   3rd Qu.: 1406.8
+ Max.   :8027.0   Max.   :30757   Max.   :57.00   Max.   :11631.0
+
+>
+> # This is a small subset of U.S. NOAA storm database.
+> file <- system.file("files/storm.dbc", package="read.dbc")
+> storm <- read.dbc(file)
+> head(storm)
+  BEGIN_DATE COUNTYNAME STATE  EVTYPE INJURIES FATALITIES
+1 1982-06-13     MOBILE    AL TORNADO       15          0
+2 2004-05-21    BALDWIN    AL TORNADO        0          0
+3 2004-06-01    FAYETTE    AL TORNADO        2          0
+4 2004-06-08    MADISON    AL TORNADO        2          0
+5 2009-07-15    CULLMAN    AL TORNADO        2          0
+6 2005-01-28 LAUDERDALE    AL TORNADO        6          0
+> str(storm)
+'data.frame':	100 obs. of  6 variables:
+ $ BEGIN_DATE: Date, format: "1982-06-13" "2004-05-21" ...
+ $ COUNTYNAME: Factor w/ 40 levels "BALDWIN","BARBOUR",..: 29 1 17 27 13 24 4 37 38 17 ...
+ $ STATE     : Factor w/ 1 level "AL": 1 1 1 1 1 1 1 1 1 1 ...
+ $ EVTYPE    : Factor w/ 3 levels "HAIL","TORNADO",..: 2 2 2 2 2 2 2 2 2 2 ...
+ $ INJURIES  : num  15 0 2 2 2 6 1 0 14 0 ...
+ $ FATALITIES: num  0 0 0 0 0 0 0 0 1 0 ...
+ - attr(*, "data_types")= chr [1:6] "D" "C" "C" "C" ...
+>
+>
+>
+>
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("read.dbc", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
+> ### * <FOOTER>
+> ###
+> cleanEx()
+> options(digits = 7L)
+> base::cat("Time elapsed: ", proc.time() - base::get("ptime", pos = 'CheckExEnv'),"\n")
+Time elapsed:  0.231 0.028 0.26 0 0
+> grDevices::dev.off()
+null device
+          1
+> ###
+> ### Local variables: ***
+> ### mode: outline-minor ***
+> ### outline-regexp: "\\(> \\)?### [*]+" ***
+> ### End: ***
+> quit('no')

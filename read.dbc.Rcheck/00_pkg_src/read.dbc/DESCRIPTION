@@ -1,0 +1,23 @@
+Package: read.dbc
+Title: Read Data Stored in DBC (Compressed DBF) Files
+Description: Functions for reading and decompressing the DBC (compressed DBF) files. Please note that this is the file format used by the Brazilian Ministry of Health (DATASUS) to publish healthcare datasets. It is not related to the FoxPro or CANdb DBC file formats.
+Version: 1.0.7
+Depends: R (>= 3.3.0)
+Imports: foreign
+Authors@R: c(
+              person("Daniela", "Petruzalek", email = "daniela.petruzalek@gmail.com", role = c("aut", "cre", "cph")),
+              person("Mark", "Adler", email = "madler@alumni.caltech.edu", role = c("cph", "ctb")),
+              person("Pablo", "Marcondes Fonseca", email = "pablo.mmarcondes@gmail.com", role = c("cph", "ctb"))
+           )
+Maintainer: Daniela Petruzalek <daniela.petruzalek@gmail.com>
+URL: https://github.com/danicat/read.dbc
+BugReports: https://github.com/danicat/read.dbc/issues
+Copyright: 2016 Daniela Petruzalek
+License: AGPL-3
+Encoding: UTF-8
+RoxygenNote: 7.3.1
+NeedsCompilation: yes
+Packaged: 2025-07-14 23:14:25 UTC; jules
+Author: Daniela Petruzalek [aut, cre, cph],
+  Mark Adler [cph, ctb],
+  Pablo Marcondes Fonseca [cph, ctb]

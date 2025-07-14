@@ -44,7 +44,15 @@ jobs:
           extra-packages: any::rcmdcheck
           needs: check
 
-      - uses: r-lib/actions/check-r-package@v2
-        with:
-          upload-snapshots: true
-          build_args: 'c("--no-manual","--compact-vignettes=gs+qpdf")'
+      - name: Install dependencies
+        run: |
+          sudo apt-get update && sudo apt-get install -y clang
+      - name: Run R CMD check with ASAN
+        run: |
+          export CC=clang
+          export CFLAGS="-fsanitize=address,undefined -fno-omit-frame-pointer"
+          export CXX=clang++
+          export CXXFLAGS="-fsanitize=address,undefined -fno-omit-frame-pointer"
+          R CMD build .
+          R CMD check --as-cran read.dbc_*.tar.gz
+        shell: bash

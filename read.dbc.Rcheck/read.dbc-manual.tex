@@ -1,0 +1,175 @@
+\nonstopmode{}
+\documentclass[letterpaper]{book}
+\usepackage[times,inconsolata,hyper]{Rd}
+\usepackage{makeidx}
+\usepackage[utf8]{inputenc} % @SET ENCODING@
+% \usepackage{graphicx} % @USE GRAPHICX@
+\makeindex{}
+\begin{document}
+\chapter*{}
+\begin{center}
+{\textbf{\huge Package `read.dbc'}}
+\par\bigskip{\large \today}
+\end{center}
+\inputencoding{utf8}
+\ifthenelse{\boolean{Rd@use@hyper}}{\hypersetup{pdftitle = {read.dbc: Read Data Stored in DBC (Compressed DBF) Files}}}{}
+\ifthenelse{\boolean{Rd@use@hyper}}{\hypersetup{pdfauthor = {Daniela Petruzalek}}}{}
+\begin{description}
+\raggedright{}
+\item[Title]\AsIs{Read Data Stored in DBC (Compressed DBF) Files}
+\item[Description]\AsIs{Functions for reading and decompressing the DBC (compressed DBF) files. Please note that this is the file format used by the Brazilian Ministry of Health (DATASUS) to publish healthcare datasets. It is not related to the FoxPro or CANdb DBC file formats.}
+\item[Version]\AsIs{1.0.7}
+\item[Depends]\AsIs{R (>= 3.3.0)}
+\item[Imports]\AsIs{foreign}
+\item[Maintainer]\AsIs{Daniela Petruzalek }\email{daniela.petruzalek@gmail.com}\AsIs{}
+\item[URL]\AsIs{}\url{https://github.com/danicat/read.dbc}\AsIs{}
+\item[BugReports]\AsIs{}\url{https://github.com/danicat/read.dbc/issues}\AsIs{}
+\item[Copyright]\AsIs{2016 Daniela Petruzalek}
+\item[License]\AsIs{AGPL-3}
+\item[Encoding]\AsIs{UTF-8}
+\item[RoxygenNote]\AsIs{7.3.1}
+\item[NeedsCompilation]\AsIs{yes}
+\item[Author]\AsIs{Daniela Petruzalek [aut, cre, cph],
+Mark Adler [cph, ctb],
+Pablo Marcondes Fonseca [cph, ctb]}
+\end{description}
+\Rdcontents{\R{} topics documented:}
+\inputencoding{utf8}
+\HeaderA{dbc2dbf}{Decompress a DBC file}{dbc2dbf}
+\keyword{dbc}{dbc2dbf}
+\keyword{dbf}{dbc2dbf}
+%
+\begin{Description}
+This function allows you decompress a DBC file. When decompressed, it becomes a regular DBF file.
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+dbc2dbf(input.file, output.file)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{input.file}] The name of the DBC file (including extension)
+
+\item[\code{output.file}] The output file name (including extension)
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Details}
+DBC is the extension for compressed DBF files (from the 'XBASE' family of databases).
+This is a proprietary file format used by the Brazilian government to publish public healthcare data.
+When decompressed, it becomes a regular DBF file.
+
+Please note that this is the file format is not related to the FoxPro or CANdb DBC file formats.
+\end{Details}
+%
+\begin{Value}
+Return TRUE if succeed, FALSE otherwise.
+\end{Value}
+%
+\begin{Author}
+Daniela Petruzalek, \email{daniela.petruzalek@gmail.com}
+\end{Author}
+%
+\begin{Source}
+The internal C code for \code{dbc2dbf} is based on \code{blast} decompressor and \code{blast-dbf} (see \emph{References}).
+\end{Source}
+%
+\begin{References}
+\code{blast} source code in C: \url{https://github.com/madler/zlib/tree/master/contrib/blast}
+\code{blast-dbf}, DBC to DBF command-line decompression tool: \url{https://github.com/eaglebh/blast-dbf}
+\end{References}
+%
+\begin{SeeAlso}
+\code{\LinkA{read.dbc}{read.dbc}}
+\end{SeeAlso}
+%
+\begin{Examples}
+\begin{ExampleCode}
+# Input file name
+input  <- system.file("files/sids.dbc", package = "read.dbc")
+
+# Output file name
+output <- tempfile(fileext = ".dbc")
+
+# The call returns TRUE on success
+if( dbc2dbf(input.file = input, output.file = output) ) {
+     print("File decompressed!")
+     # do things with the file
+}
+
+file.remove(output) # clean up example, don't do in real life :)
+
+\end{ExampleCode}
+\end{Examples}
+\inputencoding{utf8}
+\HeaderA{read.dbc}{Read Data Stored in DBC (Compressed DBF) Files}{read.dbc}
+\keyword{datasus}{read.dbc}
+\keyword{dbc}{read.dbc}
+%
+\begin{Description}
+This function allows you to read a DBC (compressed DBF) file into a data frame.
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+read.dbc(file, ...)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{file}] The name of the DBC file (including extension)
+
+\item[\code{...}] Further arguments to be passed to \code{\LinkA{read.dbf}{read.dbf}}
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Details}
+DBC is the extension for compressed DBF files (from the 'XBASE' family of databases).
+This is a proprietary file format used by the Brazilian government to publish public healthcare data, and it is not related to the FoxPro or CANdb DBC file formats.
+
+The \code{read.dbc} function will decompress the input DBC file into a temporary DBF file and call \code{\LinkA{read.dbf}{read.dbf}} from the \code{foreign} package to read it into a data frame.
+\end{Details}
+%
+\begin{Value}
+A data.frame of the data from the DBC file.
+\end{Value}
+%
+\begin{Note}
+DATASUS is the name of the Department of Informatics of the Brazilian Health System (Sistema Único de Saúde - SUS) and is responsible for publishing public healthcare data in Brazil.
+Besides the DATASUS, the Brazilian National Agency for Supplementary Health (ANS) also uses this file format for its public data.
+
+This function was tested using files from both DATASUS and ANS to ensure compliance with the format, and hence ensure its usability by researchers.
+
+Neither this project, nor its author, has any association with the Brazilian government.
+\end{Note}
+%
+\begin{Author}
+Daniela Petruzalek, \email{daniela.petruzalek@gmail.com}
+\end{Author}
+%
+\begin{SeeAlso}
+\code{\LinkA{dbc2dbf}{dbc2dbf}}
+\end{SeeAlso}
+%
+\begin{Examples}
+\begin{ExampleCode}
+# The 'sids.dbc' file is the compressed version of 'sids.dbf' from the "foreign" package.
+file <- system.file("files/sids.dbc", package="read.dbc")
+sids <- read.dbc(file)
+str(sids)
+summary(sids)
+
+# This is a small subset of U.S. NOAA storm database.
+file <- system.file("files/storm.dbc", package="read.dbc")
+storm <- read.dbc(file)
+head(storm)
+str(storm)
+
+\end{ExampleCode}
+\end{Examples}
+\printindex{}
+\end{document}

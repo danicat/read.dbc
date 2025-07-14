@@ -1,0 +1,7 @@
+CC=clang
+CFLAGS=-fsanitize=address,undefined -fno-omit-frame-pointer
+CXX=clang++
+CXXFLAGS=-fsanitize=address,undefined -fno-omit-frame-pointer
+FC=gfortran
+F77=gfortran
+FLIBS=-lgfortran
