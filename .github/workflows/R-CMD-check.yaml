@@ -68,4 +68,4 @@ jobs:
           needs: check
 
       - name: Run tests with ASan
-        run: rcmdcheck::rcmdcheck(args = "--no-manual", error_on = "warning", check_dir = "check")
+        run: R -e 'rcmdcheck::rcmdcheck(args = "--no-manual", error_on = "warning", check_dir = "check")'
