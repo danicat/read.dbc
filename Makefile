@@ -1,69 +1,71 @@
-default: help
+.DEFAULT_GOAL := help
 
-SRC=./src
+SRC := ./src
+PKG_NAME := read.dbc
+
+.PHONY: all
+all: document generate lib ## Generate all package files
 
 .PHONY: lib
-lib: clean # build the shared library version of dbc2dbf
-	R CMD SHLIB -o src/db2dbf.so src/*.c -fsanitize=undefined
+lib: src/read_dbc_init.c ## Build the shared library
+	R CMD SHLIB -o $(SRC)/$(PKG_NAME).so $(SRC)/*.c
 
 .PHONY: clean
-clean: # clean generated files
-	rm -rf revdep/*
+clean: ## Clean generated build files
 	rm -f $(SRC)/*.o
 	rm -f $(SRC)/*.so
+	rm -f man/*.Rd
+	rm -f src/read_dbc_init.c
+
+.PHONY: clean-revdep
+clean-revdep: ## Clean reverse dependency check files
+	rm -rf revdep/*
 
 .PHONY: check
-check: # run CRAN checks
+check: all ## Run CRAN checks
 	Rscript -e "devtools::check(remote = TRUE, manual = FALSE)"
 	Rscript -e "urlchecker::url_check()"
 
+.PHONY: test
+test: ## Run examples as lightweight tests
+	Rscript tests/run-examples.R
+
 .PHONY: wincheck
-wincheck: # run CRAN checks on Windows. Note: it uses a remote machine, check email for results
+wincheck: ## Run CRAN checks on Windows
 	Rscript -e "devtools::check_win_devel()"
 
 .PHONY: revdep
-revdep: # reverse dependency checks
+revdep: ## Reverse dependency checks
 	Rscript -e "revdepcheck::revdep_check(num_workers = 4)"
 
 .PHONY: generate
-generate: # generate C to R interface code
+generate: src/read_dbc_init.c ## Generate C to R interface code
+
+src/read_dbc_init.c: $(SRC)/dbc2dbf.c $(SRC)/blast.c
 	Rscript -e 'tools::package_native_routine_registration_skeleton(".")' > src/read_dbc_init.c
 
 .PHONY: setup
-setup: # install tools necessary for building the package
-	Rscript -e 'install.packages("devtools", repos="http://cran.us.r-project.org")'
-	Rscript -e 'install.packages("roxygen2", repos="http://cran.us.r-project.org")'
-	Rscript -e 'devtools::install_github("r-lib/revdepcheck")'
+setup: ## Install development dependencies
+	Rscript -e 'install.packages(c("devtools", "roxygen2", "usethis", "revdepcheck"), repos="http://cran.us.r-project.org")'
 	Rscript -e "usethis::use_revdep()"
 
 .PHONY: document
-document: # generate R docs from source code
+document: ## Generate R docs from source code
 	Rscript -e "devtools::document()"
 
-.PHONY: help
-help: # Show help for each of the Makefile recipes.
-	@grep -E '^[a-zA-Z0-9 -]+:.*#'  Makefile | sort | while read -r l; do printf "\033[1;32m$$(echo $$l | cut -f 1 -d':')\033[00m:$$(echo $$l | cut -f 2- -d'#')\n"; done
-
 .PHONY: cran
-cran: clean document check revdep # prepare the package for CRAN release
-	@echo ======== BUILD COMPLETE ========
+cran: all check revdep ## Prepare the package for CRAN release
+	@echo "======== BUILD COMPLETE ========"
 	@echo
-	@echo New version is ready for publishing.
+	@echo "New version is ready for publishing."
 	@echo
-	@echo Please check that the following tasks are completed before submitting to CRAN:
-	@echo - Update inst/CHANGELOG.md
-	@echo - Update NEWS.md
-	@echo - Update cran-comments.md
+	@echo "Please check that the following tasks are completed before submitting to CRAN:"
+	@echo "- Update inst/CHANGELOG.md"
+	@echo "- Update NEWS.md"
+	@echo "- Update cran-comments.md"
 	@echo
-	@echo After the tasks above are completed, run the following command from R or RStudio to submit to CRAN:
-	@echo
-	@echo "devtools::submit_cran()"
-	@echo
-	@echo After submitting, create a commit with the updated CRAN-SUBMISSION file and tag it as a release candidate:
-	@echo
-	@echo git tag 1.0.7-rc1 # create release candidate tag
-	@echo git push --tags   # publish remote tag
-	@echo
-	@echo Once a submission is approved, create the corresponding release tag for the latest commit.
-	@echo
-	@echo
+	@echo "After the tasks above are completed, run 'devtools::submit_cran()' from R to submit to CRAN."
+
+.PHONY: help
+help: ## Show help for each of the Makefile recipes
+	@grep -E '^[a-zA-Z0-9 -]+:.*##' Makefile | sort | while read -r l; do printf " [1;32m$$(echo $$l | cut -f 1 -d':') [00m:$$(echo $$l | cut -f 2- -d'#')\n"; done
