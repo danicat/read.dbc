@@ -58,17 +58,15 @@ read.dbc <- function(file, ...) {
         # Output file name
         out <- tempfile(fileext = ".dbf")
 
-        # Decompress the dbc file using the blast library wrapper.
-        if (dbc2dbf(file, out)) {
-                # Use read.dbf from foreing package to read the uncompressed file
-                df <- foreign::read.dbf(out, ...)
+        # Decompress the dbc file. dbc2dbf will error out if it fails.
+        dbc2dbf(file, out)
 
-                # Delete temp file
-                file.remove(out)
+        # Use read.dbf from foreing package to read the uncompressed file
+        df <- foreign::read.dbf(out, ...)
 
-                # Return data frame
-                return(df)
-        } else {
-                stop("Failed to decompress file.")
-        }
+        # Delete temp file
+        file.remove(out)
+
+        # Return data frame
+        return(df)
 }

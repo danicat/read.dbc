@@ -55,16 +55,33 @@
 #'
 dbc2dbf <- function(input.file, output.file) {
         if (!file.exists(input.file)) {
-                return(FALSE)
+                stop("Input file does not exist.")
         }
         if (!dir.exists(dirname(output.file))) {
-                return(FALSE)
+                stop("Output directory does not exist or is not writable.")
         }
+
         ret_code <- 0
-        out <- .C("dbc2dbf", input = as.character(path.expand(input.file)), output = as.character(path.expand(output.file)), ret_code = as.integer(ret_code))
-        if (out$ret_code == 0) {
-                return(TRUE)
-        } else {
-                return(FALSE)
+        out <- .C("dbc2dbf",
+                  input = as.character(path.expand(input.file)),
+                  output = as.character(path.expand(output.file)),
+                  ret_code = as.integer(ret_code))
+
+        if (out$ret_code != 0) {
+            error_message <- switch(as.character(out$ret_code),
+                "-1" = "Error reading input file.",
+                "-2" = "Error creating output file.",
+                "-3" = ,
+                "-4" = ,
+                "-5" = ,
+                "-7" = "Error processing input file header.",
+                "-6" = "Error writing output file.",
+                "-8" = "Decompression warning: unused bytes of input.",
+                "1" = ,
+                "2" = "Error decompressing file (is it a valid DBC file?).",
+                "An unknown error occurred."
+            )
+            stop(error_message)
         }
+        return(TRUE)
 }
