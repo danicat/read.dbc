@@ -60,6 +60,11 @@ dbc2dbf <- function(input.file, output.file) {
         if (!dir.exists(dirname(output.file))) {
                 return(FALSE)
         }
-        out <- .C("dbc2dbf", input = as.character(path.expand(input.file)), output = as.character(path.expand(output.file)))
-        file.exists(output.file)
+        ret_code <- 0
+        out <- .C("dbc2dbf", input = as.character(path.expand(input.file)), output = as.character(path.expand(output.file)), ret_code = as.integer(ret_code))
+        if (out$ret_code == 0) {
+                return(TRUE)
+        } else {
+                return(FALSE)
+        }
 }

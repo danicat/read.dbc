@@ -18,3 +18,11 @@ test_that("read.dbc handles corrupted files", {
   expect_error(read.dbc(invalid_dbc_file))
   unlink(invalid_dbc_file)
 })
+
+test_that("dbc2dbf handles corrupted files", {
+  # Create a dummy invalid DBC file
+  invalid_dbc_file <- tempfile(fileext = ".dbc")
+  writeLines("invalid file", invalid_dbc_file)
+  expect_false(dbc2dbf(invalid_dbc_file, tempfile(fileext = ".dbf")))
+  unlink(invalid_dbc_file)
+})

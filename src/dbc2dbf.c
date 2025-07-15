@@ -64,7 +64,7 @@ void cleanup(FILE* input, FILE* output) {
 
     Please provide fully qualified names, including file extension.
  */
-void dbc2dbf(char** input_file, char** output_file) {
+void dbc2dbf(char** input_file, char** output_file, int* ret_code) {
     FILE          *input = 0, *output = 0;
     int           ret = 0;
     unsigned char rawHeader[2];
@@ -73,27 +73,31 @@ void dbc2dbf(char** input_file, char** output_file) {
     /* Open input file */
     input  = fopen(input_file[0], "rb");
     if(input == NULL) {
-        error("Error reading input file %s: %s", input_file[0], strerror(errno));
+        *ret_code = -1;
+        return;
     }
 
     /* Open output file */
     output = fopen(output_file[0], "wb");
     if(output == NULL) {
         cleanup(input, output);
-        error("Error reading output file %s: %s", output_file[0], strerror(errno));
+        *ret_code = -2;
+        return;
     }
 
     /* Process file header - skip 8 bytes */
     if( fseek(input, 8, SEEK_SET) ) {
         cleanup(input, output);
-        error("Error processing input file %s: %s", input_file[0], strerror(errno));
+        *ret_code = -3;
+        return;
     }
 
     /* Reads two bytes from the header = header size */
     ret = fread(rawHeader, 2, 1, input);
     if( ferror(input) ) {
         cleanup(input, output);
-        error("Error reading input file %s: %s", input_file[0], strerror(errno));
+        *ret_code = -4;
+        return;
     }
 
     /* Platform independent code (header is stored in little endian format) */
@@ -108,26 +112,30 @@ void dbc2dbf(char** input_file, char** output_file) {
     ret = fread(buf, 1, header, input);
     if( ferror(input) ) {
         cleanup(input, output);
-        error("Error reading input file %s: %s", input_file[0], strerror(errno));
+        *ret_code = -5;
+        return;
     }
 
     ret = fwrite(buf, 1, header, output);
     if( ferror(output) ) {
         cleanup(input, output);
-        error("Error writing output file %s: %s", output_file[0], strerror(errno));
+        *ret_code = -6;
+        return;
     }
 
     /* Jump to the data (Skip CRC32) */
     if( fseek(input, header + 4, SEEK_SET) ) {
         cleanup(input, output);
-        error("Error processing input file %s: %s", input_file[0], strerror(errno));
+        *ret_code = -7;
+        return;
     }
 
     /* decompress */
     ret = blast(inf, input, outf, output);
     if( ret ) {
         cleanup(input, output);
-        error("error decompressing file: %d", ret);
+        *ret_code = ret;
+        return;
     }
 
     /* see if there are any leftover bytes */
@@ -135,9 +143,11 @@ void dbc2dbf(char** input_file, char** output_file) {
     while (fgetc(input) != EOF) n++;
     if (n) {
         cleanup(input, output);
-        error("blast warning: %d unused bytes of input\n", n);
+        *ret_code = -8;
+        return;
     }
 
     cleanup(input, output);
+    *ret_code = 0;
 }
 
