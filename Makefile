@@ -27,8 +27,8 @@ check: all ## Run CRAN checks
 	Rscript -e "urlchecker::url_check()"
 
 .PHONY: test
-test: ## Run examples as lightweight tests
-	Rscript tests/run-examples.R
+test: ## Run tests
+	Rscript -e "devtools::test()"
 
 .PHONY: wincheck
 wincheck: ## Run CRAN checks on Windows

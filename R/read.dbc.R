@@ -51,11 +51,15 @@
 #' str(storm)
 #'
 read.dbc <- function(file, ...) {
+        if (!file.exists(file)) {
+                stop("Input file does not exist.")
+        }
+
         # Output file name
         out <- tempfile(fileext = ".dbf")
 
         # Decompress the dbc file using the blast library wrapper.
-        if( dbc2dbf(file, out) ) {
+        if (dbc2dbf(file, out)) {
                 # Use read.dbf from foreing package to read the uncompressed file
                 df <- foreign::read.dbf(out, ...)
 
@@ -64,5 +68,7 @@ read.dbc <- function(file, ...) {
 
                 # Return data frame
                 return(df)
+        } else {
+                stop("Failed to decompress file.")
         }
 }
