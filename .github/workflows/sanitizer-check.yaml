@@ -1,0 +1,21 @@
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+name: Sanitizer-check
+
+jobs:
+  Sanitizer-check:
+    runs-on: ubuntu-latest
+    container: wch/r-debug
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run sanitizer checks
+        run: |
+          Rscript -e 'install.packages("devtools", repos="http://cran.us.r-project.org")'
+          Rscript -e 'devtools::install_deps(dependencies = TRUE)'
+          Rscript scripts/run-sanitizer-checks.R

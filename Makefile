@@ -40,6 +40,10 @@ setup: # install tools necessary for building the package
 document: # generate R docs from source code
 	Rscript -e "devtools::document()"
 
+.PHONY: sanitizer-check
+sanitizer-check: # run sanitizer checks using a docker image
+	docker run -it --rm -v $(pwd):/mypkg -w /mypkg wch/r-debug R -f scripts/run-sanitizer-checks.R
+
 .PHONY: help
 help: # Show help for each of the Makefile recipes.
 	@grep -E '^[a-zA-Z0-9 -]+:.*#'  Makefile | sort | while read -r l; do printf "\033[1;32m$$(echo $$l | cut -f 1 -d':')\033[00m:$$(echo $$l | cut -f 2- -d'#')\n"; done
