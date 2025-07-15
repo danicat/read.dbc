@@ -1,14 +1,14 @@
 test_that("read.dbc handles non-existent files", {
-  expect_error(read.dbc("non-existent-file.dbc"), "Input file does not exist: non-existent-file.dbc")
+  expect_error(read.dbc("non-existent-file.dbc"), "Error reading input file: non-existent-file.dbc - No such file or directory")
 })
 
 test_that("dbc2dbf handles non-existent files", {
-  expect_error(dbc2dbf("non-existent-file.dbc", "output.dbf"), "Input file does not exist: non-existent-file.dbc")
+  expect_error(dbc2dbf("non-existent-file.dbc", "output.dbf"), "Error reading input file: non-existent-file.dbc - No such file or directory")
 })
 
 test_that("dbc2dbf handles invalid output paths", {
   input  <- system.file("files/sids.dbc", package = "read.dbc")
-  expect_error(dbc2dbf(input, "/non-existent-dir/output.dbf"), "Output directory does not exist or is not writable: /non-existent-dir")
+  expect_error(dbc2dbf(input, "/non-existent-dir/output.dbf"), "Error creating output file: /non-existent-dir/output.dbf - No such file or directory")
 })
 
 test_that("read.dbc handles corrupted files", {

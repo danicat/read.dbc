@@ -64,7 +64,7 @@ void cleanup(FILE* input, FILE* output) {
 
     Please provide fully qualified names, including file extension.
  */
-void dbc2dbf(char** input_file, char** output_file, int* ret_code) {
+void dbc2dbf(char** input_file, char** output_file, int* ret_code, char** error_str) {
     FILE          *input = 0, *output = 0;
     int           ret = 0;
     unsigned char rawHeader[2];
@@ -74,6 +74,8 @@ void dbc2dbf(char** input_file, char** output_file, int* ret_code) {
     input  = fopen(input_file[0], "rb");
     if(input == NULL) {
         *ret_code = -1;
+        strncpy(error_str[0], strerror(errno), 255);
+        error_str[0][255] = '\0';
         return;
     }
 
@@ -82,6 +84,8 @@ void dbc2dbf(char** input_file, char** output_file, int* ret_code) {
     if(output == NULL) {
         cleanup(input, output);
         *ret_code = -2;
+        strncpy(error_str[0], strerror(errno), 255);
+        error_str[0][255] = '\0';
         return;
     }
 
@@ -89,6 +93,8 @@ void dbc2dbf(char** input_file, char** output_file, int* ret_code) {
     if( fseek(input, 8, SEEK_SET) ) {
         cleanup(input, output);
         *ret_code = -3;
+        strncpy(error_str[0], strerror(errno), 255);
+        error_str[0][255] = '\0';
         return;
     }
 
@@ -97,6 +103,8 @@ void dbc2dbf(char** input_file, char** output_file, int* ret_code) {
     if( ferror(input) ) {
         cleanup(input, output);
         *ret_code = -4;
+        strncpy(error_str[0], strerror(errno), 255);
+        error_str[0][255] = '\0';
         return;
     }
 
@@ -113,6 +121,8 @@ void dbc2dbf(char** input_file, char** output_file, int* ret_code) {
     if( ferror(input) ) {
         cleanup(input, output);
         *ret_code = -5;
+        strncpy(error_str[0], strerror(errno), 255);
+        error_str[0][255] = '\0';
         return;
     }
 
@@ -120,6 +130,8 @@ void dbc2dbf(char** input_file, char** output_file, int* ret_code) {
     if( ferror(output) ) {
         cleanup(input, output);
         *ret_code = -6;
+        strncpy(error_str[0], strerror(errno), 255);
+        error_str[0][255] = '\0';
         return;
     }
 
@@ -127,6 +139,8 @@ void dbc2dbf(char** input_file, char** output_file, int* ret_code) {
     if( fseek(input, header + 4, SEEK_SET) ) {
         cleanup(input, output);
         *ret_code = -7;
+        strncpy(error_str[0], strerror(errno), 255);
+        error_str[0][255] = '\0';
         return;
     }
 

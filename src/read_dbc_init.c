@@ -6,10 +6,10 @@
 */
 
 /* .C calls */
-extern void dbc2dbf(void *, void *, void *);
+extern void dbc2dbf(void *, void *, void *, void *);
 
 static const R_CMethodDef CEntries[] = {
-    {"dbc2dbf", (DL_FUNC) &dbc2dbf, 3},
+    {"dbc2dbf", (DL_FUNC) &dbc2dbf, 4},
     {NULL, NULL, 0}
 };
 

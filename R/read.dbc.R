@@ -51,10 +51,6 @@
 #' str(storm)
 #'
 read.dbc <- function(file, ...) {
-        if (!file.exists(file)) {
-                stop(paste("Input file does not exist:", file))
-        }
-
         # Output file name
         out <- tempfile(fileext = ".dbf")
 

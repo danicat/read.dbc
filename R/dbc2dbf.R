@@ -54,18 +54,13 @@
 #' \code{blast-dbf}, DBC to DBF command-line decompression tool: \url{https://github.com/eaglebh/blast-dbf}
 #'
 dbc2dbf <- function(input.file, output.file) {
-        if (!file.exists(input.file)) {
-                stop(paste("Input file does not exist:", input.file))
-        }
-        if (!dir.exists(dirname(output.file))) {
-                stop(paste("Output directory does not exist or is not writable:", dirname(output.file)))
-        }
-
         ret_code <- 0
+        error_str <- paste(rep(" ", 256), collapse="") # buffer for error string
         out <- .C("dbc2dbf",
                   input = as.character(path.expand(input.file)),
                   output = as.character(path.expand(output.file)),
-                  ret_code = as.integer(ret_code))
+                  ret_code = as.integer(ret_code),
+                  error_str = as.character(error_str))
 
         if (out$ret_code != 0) {
             error_message <- switch(as.character(out$ret_code),
@@ -81,6 +76,9 @@ dbc2dbf <- function(input.file, output.file) {
                 "2" = paste("Error decompressing file (is it a valid DBC file?):", input.file),
                 "An unknown error occurred."
             )
+            if (nchar(trimws(out$error_str)) > 0) {
+                error_message <- paste(error_message, "-", trimws(out$error_str))
+            }
             stop(error_message)
         }
         return(TRUE)
