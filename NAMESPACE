@@ -2,4 +2,5 @@
 
 export(dbc2dbf)
 export(read.dbc)
+importFrom(foreign,read.dbf)
 useDynLib(read.dbc)

@@ -8,3 +8,5 @@ Makefile
 ^CRAN-SUBMISSION$
 ^\.github$
 scripts
+^GEMINI\.md$
+^system\.md$
