@@ -52,7 +52,7 @@
 #'
 read.dbc <- function(file, ...) {
         if (!file.exists(file)) {
-                stop("Input file does not exist.")
+                stop(paste("Input file does not exist:", file))
         }
 
         # Output file name
