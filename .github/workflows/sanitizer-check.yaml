@@ -9,7 +9,7 @@ name: Sanitizer-check
 jobs:
   Sanitizer-check:
     runs-on: ubuntu-latest
-    container: wch/r-debug
+    container: wch1/r-debug
 
     steps:
       - uses: actions/checkout@v4
