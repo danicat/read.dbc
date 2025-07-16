@@ -30,6 +30,10 @@ check: all ## Run CRAN checks
 test: ## Run tests
 	Rscript -e "devtools::test()"
 
+.PHONY: check-sanitized
+check-sanitized: ## Run CRAN checks with ASAN and UBSAN
+	docker run --rm -v $PWD:/work r-devel-sanitized R CMD check /work
+
 .PHONY: wincheck
 wincheck: ## Run CRAN checks on Windows
 	Rscript -e "devtools::check_win_devel()"

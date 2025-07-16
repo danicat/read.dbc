@@ -4,3 +4,4 @@
 *.o
 *.so
 .vscode
+work.Rcheck/

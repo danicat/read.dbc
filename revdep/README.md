@@ -10,7 +10,7 @@
 |collate  |en_GB.UTF-8                        |
 |ctype    |en_GB.UTF-8                        |
 |tz       |Europe/London                      |
-|date     |2025-07-15                         |
+|date     |2025-07-16                         |
 |pandoc   |3.7.0.2 @ /opt/homebrew/bin/pandoc |
 |quarto   |NA                                 |
 
