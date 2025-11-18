@@ -58,6 +58,10 @@ void cleanup(FILE* input, FILE* output) {
     if( output ) fclose(output);
 }
 
+#define HEADER_OFFSET 8
+#define CRC_OFFSET 4
+#define MAX_HEADER_SIZE 65535 // 16-bit unsigned integer max
+
 /*
     dbc2dbf(char** input_file, char** output_file)
     This function decompresses a given .dbc input file into the corresponding .dbf.
@@ -90,7 +94,7 @@ void dbc2dbf(char** input_file, char** output_file, int* ret_code, char** error_
     }
 
     /* Process file header - skip 8 bytes */
-    if( fseek(input, 8, SEEK_SET) ) {
+    if( fseek(input, HEADER_OFFSET, SEEK_SET) ) {
         cleanup(input, output);
         *ret_code = -3;
         strncpy(error_str[0], strerror(errno), 255);
@@ -115,10 +119,18 @@ void dbc2dbf(char** input_file, char** output_file, int* ret_code, char** error_
     rewind(input);
 
     /* Copy file header from input to output */
-    unsigned char buf[header];
+    unsigned char *buf = (unsigned char *)malloc(header);
+    if (buf == NULL) {
+        cleanup(input, output);
+        *ret_code = -9; // New error code for memory allocation failure
+        strncpy(error_str[0], "Memory allocation failed", 255);
+        error_str[0][255] = '\0';
+        return;
+    }
 
     ret = fread(buf, 1, header, input);
     if( ferror(input) ) {
+        free(buf);
         cleanup(input, output);
         *ret_code = -5;
         strncpy(error_str[0], strerror(errno), 255);
@@ -128,6 +140,7 @@ void dbc2dbf(char** input_file, char** output_file, int* ret_code, char** error_
 
     ret = fwrite(buf, 1, header, output);
     if( ferror(output) ) {
+        free(buf);
         cleanup(input, output);
         *ret_code = -6;
         strncpy(error_str[0], strerror(errno), 255);
@@ -135,8 +148,10 @@ void dbc2dbf(char** input_file, char** output_file, int* ret_code, char** error_
         return;
     }
 
+    free(buf); // Don't forget to free the memory!
+
     /* Jump to the data (Skip CRC32) */
-    if( fseek(input, header + 4, SEEK_SET) ) {
+    if( fseek(input, header + CRC_OFFSET, SEEK_SET) ) {
         cleanup(input, output);
         *ret_code = -7;
         strncpy(error_str[0], strerror(errno), 255);

@@ -72,6 +72,7 @@ dbc2dbf <- function(input.file, output.file) {
                 "-7" = paste("Error processing input file header:", input.file),
                 "-6" = paste("Error writing output file:", output.file),
                 "-8" = "Decompression warning: unused bytes of input.",
+                "-9" = "Memory allocation failed.",
                 "1" = ,
                 "2" = paste("Error decompressing file (is it a valid DBC file?):", input.file),
                 "An unknown error occurred."
