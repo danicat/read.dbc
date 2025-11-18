@@ -30,11 +30,13 @@
 #include <errno.h>
 #include <string.h>
 #include <stdint.h>
+#include <stdarg.h>
 #include <R.h>
 
 #include "blast.h"
 
 #define CHUNK 4096
+#define MAX_ERR 255
 
 /* Input file helper function */
 static unsigned inf(void *how, unsigned char **buf)
@@ -58,6 +60,15 @@ void cleanup(FILE* input, FILE* output) {
     if( output ) fclose(output);
 }
 
+/* Helper to format error strings */
+void set_error(char** error_str, const char* fmt, ...) {
+    va_list args;
+    va_start(args, fmt);
+    vsnprintf(error_str[0], MAX_ERR, fmt, args);
+    va_end(args);
+    error_str[0][MAX_ERR] = '\0';
+}
+
 #define HEADER_OFFSET 8
 #define CRC_OFFSET 4
 #define MAX_HEADER_SIZE 65535 // 16-bit unsigned integer max
@@ -78,8 +89,7 @@ void dbc2dbf(char** input_file, char** output_file, int* ret_code, char** error_
     input  = fopen(input_file[0], "rb");
     if(input == NULL) {
         *ret_code = -1;
-        strncpy(error_str[0], strerror(errno), 255);
-        error_str[0][255] = '\0';
+        set_error(error_str, "Error opening input file '%s': %s", input_file[0], strerror(errno));
         return;
     }
 
@@ -88,8 +98,7 @@ void dbc2dbf(char** input_file, char** output_file, int* ret_code, char** error_
     if(output == NULL) {
         cleanup(input, output);
         *ret_code = -2;
-        strncpy(error_str[0], strerror(errno), 255);
-        error_str[0][255] = '\0';
+        set_error(error_str, "Error creating output file '%s': %s", output_file[0], strerror(errno));
         return;
     }
 
@@ -97,18 +106,16 @@ void dbc2dbf(char** input_file, char** output_file, int* ret_code, char** error_
     if( fseek(input, HEADER_OFFSET, SEEK_SET) ) {
         cleanup(input, output);
         *ret_code = -3;
-        strncpy(error_str[0], strerror(errno), 255);
-        error_str[0][255] = '\0';
+        set_error(error_str, "Error seeking input file header '%s': %s", input_file[0], strerror(errno));
         return;
     }
 
     /* Reads two bytes from the header = header size */
     ret = fread(rawHeader, 2, 1, input);
-    if( ferror(input) ) {
+    if( ret != 1 || ferror(input) ) {
         cleanup(input, output);
         *ret_code = -4;
-        strncpy(error_str[0], strerror(errno), 255);
-        error_str[0][255] = '\0';
+        set_error(error_str, "Error reading header size from '%s': %s", input_file[0], ferror(input) ? strerror(errno) : "Short read/Unexpected EOF");
         return;
     }
 
@@ -123,28 +130,25 @@ void dbc2dbf(char** input_file, char** output_file, int* ret_code, char** error_
     if (buf == NULL) {
         cleanup(input, output);
         *ret_code = -9; // New error code for memory allocation failure
-        strncpy(error_str[0], "Memory allocation failed", 255);
-        error_str[0][255] = '\0';
+        set_error(error_str, "Memory allocation failed for header (%d bytes)", header);
         return;
     }
 
     ret = fread(buf, 1, header, input);
-    if( ferror(input) ) {
+    if( ret != header || ferror(input) ) {
         free(buf);
         cleanup(input, output);
         *ret_code = -5;
-        strncpy(error_str[0], strerror(errno), 255);
-        error_str[0][255] = '\0';
+        set_error(error_str, "Error reading header content from '%s': %s", input_file[0], ferror(input) ? strerror(errno) : "Short read/Unexpected EOF");
         return;
     }
 
     ret = fwrite(buf, 1, header, output);
-    if( ferror(output) ) {
+    if( ret != header || ferror(output) ) {
         free(buf);
         cleanup(input, output);
         *ret_code = -6;
-        strncpy(error_str[0], strerror(errno), 255);
-        error_str[0][255] = '\0';
+        set_error(error_str, "Error writing header to '%s': %s", output_file[0], ferror(output) ? strerror(errno) : "Short write/Disk full?");
         return;
     }
 
@@ -154,8 +158,7 @@ void dbc2dbf(char** input_file, char** output_file, int* ret_code, char** error_
     if( fseek(input, header + CRC_OFFSET, SEEK_SET) ) {
         cleanup(input, output);
         *ret_code = -7;
-        strncpy(error_str[0], strerror(errno), 255);
-        error_str[0][255] = '\0';
+        set_error(error_str, "Error seeking to compressed data in '%s': %s", input_file[0], strerror(errno));
         return;
     }
 
@@ -164,6 +167,15 @@ void dbc2dbf(char** input_file, char** output_file, int* ret_code, char** error_
     if( ret ) {
         cleanup(input, output);
         *ret_code = ret;
+        const char *msg = "Unknown decompression error";
+        switch (ret) {
+            case 2: msg = "Ran out of input before completing decompression"; break;
+            case 1: msg = "Output error before completing decompression"; break;
+            case -1: msg = "Literal flag not zero or one (invalid format)"; break;
+            case -2: msg = "Dictionary size not in 4..6 (invalid format)"; break;
+            case -3: msg = "Distance is too far back (invalid format)"; break;
+        }
+        set_error(error_str, "Decompression failed: %s", msg);
         return;
     }
 
@@ -173,6 +185,7 @@ void dbc2dbf(char** input_file, char** output_file, int* ret_code, char** error_
     if (n) {
         cleanup(input, output);
         *ret_code = -8;
+        set_error(error_str, "Decompression warning: %d unused bytes of input found", n);
         return;
     }
 

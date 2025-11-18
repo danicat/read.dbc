@@ -63,22 +63,9 @@ dbc2dbf <- function(input.file, output.file) {
                   error_str = as.character(error_str))
 
         if (out$ret_code != 0) {
-            error_message <- switch(as.character(out$ret_code),
-                "-1" = paste("Error reading input file:", input.file),
-                "-2" = paste("Error creating output file:", output.file),
-                "-3" = ,
-                "-4" = ,
-                "-5" = ,
-                "-7" = paste("Error processing input file header:", input.file),
-                "-6" = paste("Error writing output file:", output.file),
-                "-8" = "Decompression warning: unused bytes of input.",
-                "-9" = "Memory allocation failed.",
-                "1" = ,
-                "2" = paste("Error decompressing file (is it a valid DBC file?):", input.file),
-                "An unknown error occurred."
-            )
-            if (nchar(trimws(out$error_str)) > 0) {
-                error_message <- paste(error_message, "-", trimws(out$error_str))
+            error_message <- trimws(out$error_str)
+            if (nchar(error_message) == 0) {
+                error_message <- paste("Unknown error occurred (code", out$ret_code, ")")
             }
             stop(error_message)
         }
