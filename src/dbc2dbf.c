@@ -38,13 +38,18 @@
 #define CHUNK 4096
 #define MAX_ERR 255
 
+/* Thread-safe context for input operations */
+struct input_context {
+    FILE *fp;
+    unsigned char buffer[CHUNK];
+};
+
 /* Input file helper function */
 static unsigned inf(void *how, unsigned char **buf)
 {
-    static unsigned char hold[CHUNK];
-
-    *buf = hold;
-    return fread(hold, 1, CHUNK, (FILE *)how);
+    struct input_context *ctx = (struct input_context *)how;
+    *buf = ctx->buffer;
+    return fread(ctx->buffer, 1, CHUNK, ctx->fp);
 }
 
 /* Output file helper function */
@@ -163,7 +168,9 @@ void dbc2dbf(char** input_file, char** output_file, int* ret_code, char** error_
     }
 
     /* decompress */
-    ret = blast(inf, input, outf, output);
+    struct input_context ctx;
+    ctx.fp = input;
+    ret = blast(inf, &ctx, outf, output);
     if( ret ) {
         cleanup(input, output);
         *ret_code = ret;

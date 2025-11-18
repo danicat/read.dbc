@@ -289,14 +289,16 @@ static int decomp(struct state *s)
     uint32_t dist;      /* distance for copy */
     int copy;           /* copy counter */
     uint8_t *from, *to;   /* copy pointers */
-    static int virgin = 1;                              /* build tables once */
-    static int16_t litcnt[MAXBITS+1], litsym[256];      /* litcode memory */
-    static int16_t lencnt[MAXBITS+1], lensym[16];       /* lencode memory */
-    static int16_t distcnt[MAXBITS+1], distsym[64];     /* distcode memory */
-    static struct huffman litcode = {litcnt, litsym};   /* length code */
-    static struct huffman lencode = {lencnt, lensym};   /* length code */
-    static struct huffman distcode = {distcnt, distsym};/* distance code */
-        /* bit lengths of literal codes */
+    
+    /* Huffman tables - allocated on stack for thread safety */
+    int16_t litcnt[MAXBITS+1], litsym[256];      /* litcode memory */
+    int16_t lencnt[MAXBITS+1], lensym[16];       /* lencode memory */
+    int16_t distcnt[MAXBITS+1], distsym[64];     /* distcode memory */
+    struct huffman litcode = {litcnt, litsym};   /* length code */
+    struct huffman lencode = {lencnt, lensym};   /* length code */
+    struct huffman distcode = {distcnt, distsym};/* distance code */
+
+    /* bit lengths of literal codes */
     static const uint8_t litlen[] = {
         11, 124, 8, 7, 28, 7, 188, 13, 76, 4, 10, 8, 12, 10, 12, 10, 8, 23, 8,
         9, 7, 6, 7, 8, 7, 6, 55, 8, 23, 24, 12, 11, 7, 9, 11, 12, 6, 7, 22, 5,
@@ -304,22 +306,19 @@ static int decomp(struct state *s)
         8, 12, 5, 38, 5, 38, 5, 11, 7, 5, 6, 21, 6, 10, 53, 8, 7, 24, 10, 27,
         44, 253, 253, 253, 252, 252, 252, 13, 12, 45, 12, 45, 12, 61, 12, 45,
         44, 173};
-        /* bit lengths of length codes 0..15 */
+    /* bit lengths of length codes 0..15 */
     static const uint8_t lenlen[] = {2, 35, 36, 53, 38, 23};
-        /* bit lengths of distance codes 0..63 */
+    /* bit lengths of distance codes 0..63 */
     static const uint8_t distlen[] = {2, 20, 53, 230, 247, 151, 248};
     static const int16_t base[16] = {     /* base for length codes */
         3, 2, 4, 5, 6, 7, 8, 9, 10, 12, 16, 24, 40, 72, 136, 264};
     static const char extra[16] = {     /* extra bits for length codes */
         0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 3, 4, 5, 6, 7, 8};
 
-    /* set up decoding tables (once--might not be thread-safe) */
-    if (virgin) {
-        construct(&litcode, litlen, sizeof(litlen));
-        construct(&lencode, lenlen, sizeof(lenlen));
-        construct(&distcode, distlen, sizeof(distlen));
-        virgin = 0;
-    }
+    /* set up decoding tables (always build for thread safety) */
+    construct(&litcode, litlen, sizeof(litlen));
+    construct(&lencode, lenlen, sizeof(lenlen));
+    construct(&distcode, distlen, sizeof(distlen));
 
     /* read header */
     lit = bits(s, 8);
