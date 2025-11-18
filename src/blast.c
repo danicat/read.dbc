@@ -24,9 +24,11 @@
  * 1.1  16 Feb 2003     - Fixed distance check for > 4 GB uncompressed data
  * 1.2  24 Oct 2012     - Add note about using binary mode in stdio
  *                      - Fix comparisons of differently signed integers
+ * 1.3  20 Jul 2025     - Modernized types to stdint.h
+ *                      - Removed setjmp/longjmp in favor of error codes
  */
 
-#include <setjmp.h>             /* for setjmp(), longjmp(), and jmp_buf */
+#include <stdint.h>
 #include "blast.h"              /* prototype for blast() */
 
 #define MAXBITS 13              /* maximum code length */
@@ -37,20 +39,18 @@ struct state {
     /* input state */
     blast_in infun;             /* input function provided by user */
     void *inhow;                /* opaque information passed to infun() */
-    unsigned char *in;          /* next input location */
-    unsigned left;              /* available input at in */
+    uint8_t *in;                /* next input location */
+    uint32_t left;              /* available input at in */
     int bitbuf;                 /* bit buffer */
     int bitcnt;                 /* number of bits in bit buffer */
-
-    /* input limit error return state for bits() and decode() */
-    jmp_buf env;
+    int error;                  /* input error flag (1 for EOF) */
 
     /* output state */
     blast_out outfun;           /* output function provided by user */
     void *outhow;               /* opaque information passed to outfun() */
-    unsigned next;              /* index of next write location in out[] */
+    uint32_t next;              /* index of next write location in out[] */
     int first;                  /* true to check distances (for first 4K) */
-    unsigned char out[MAXWIN];  /* output buffer and sliding window */
+    uint8_t out[MAXWIN];        /* output buffer and sliding window */
 };
 
 /*
@@ -73,7 +73,10 @@ static int bits(struct state *s, int need)
     while (s->bitcnt < need) {
         if (s->left == 0) {
             s->left = s->infun(s->inhow, &(s->in));
-            if (s->left == 0) longjmp(s->env, 1);       /* out of input */
+            if (s->left == 0) {
+                s->error = 1; /* out of input */
+                return 0;
+            }
         }
         val |= (int)(*(s->in)++) << s->bitcnt;          /* load eight bits */
         s->left--;
@@ -96,8 +99,8 @@ static int bits(struct state *s, int need)
  * seen in the function decode() below.
  */
 struct huffman {
-    short *count;       /* number of symbols of each length */
-    short *symbol;      /* canonically ordered symbols */
+    int16_t *count;       /* number of symbols of each length */
+    int16_t *symbol;      /* canonically ordered symbols */
 };
 
 /*
@@ -130,7 +133,7 @@ static int decode(struct state *s, struct huffman *h)
     int index;          /* index of first code of length len in symbol table */
     int bitbuf;         /* bits from stream */
     int left;           /* bits left in next or left to process */
-    short *next;        /* next number of codes */
+    int16_t *next;      /* next number of codes */
 
     bitbuf = s->bitbuf;
     left = s->bitcnt;
@@ -157,7 +160,10 @@ static int decode(struct state *s, struct huffman *h)
         if (left == 0) break;
         if (s->left == 0) {
             s->left = s->infun(s->inhow, &(s->in));
-            if (s->left == 0) longjmp(s->env, 1);       /* out of input */
+            if (s->left == 0) {
+                s->error = 1; /* out of input */
+                return -9; 
+            }
         }
         bitbuf = *(s->in)++;
         s->left--;
@@ -183,13 +189,13 @@ static int decode(struct state *s, struct huffman *h)
  * it is possible for decode() using that table to return an error for received
  * codes past the end of the incomplete lengths.
  */
-static int construct(struct huffman *h, const unsigned char *rep, int n)
+static int construct(struct huffman *h, const uint8_t *rep, int n)
 {
     int symbol;         /* current symbol when stepping through length[] */
     int len;            /* current length when stepping through h->count[] */
     int left;           /* number of possible codes left of current length */
-    short offs[MAXBITS+1];      /* offsets in symbol table for each length */
-    short length[256];  /* code lengths */
+    int16_t offs[MAXBITS+1];      /* offsets in symbol table for each length */
+    int16_t length[256];  /* code lengths */
 
     /* convert compact repeat counts into symbol bit length list */
     symbol = 0;
@@ -280,18 +286,18 @@ static int decomp(struct state *s)
     int dict;           /* log2(dictionary size) - 6 */
     int symbol;         /* decoded symbol, extra bits for distance */
     int len;            /* length for copy */
-    unsigned dist;      /* distance for copy */
+    uint32_t dist;      /* distance for copy */
     int copy;           /* copy counter */
-    unsigned char *from, *to;   /* copy pointers */
+    uint8_t *from, *to;   /* copy pointers */
     static int virgin = 1;                              /* build tables once */
-    static short litcnt[MAXBITS+1], litsym[256];        /* litcode memory */
-    static short lencnt[MAXBITS+1], lensym[16];         /* lencode memory */
-    static short distcnt[MAXBITS+1], distsym[64];       /* distcode memory */
+    static int16_t litcnt[MAXBITS+1], litsym[256];      /* litcode memory */
+    static int16_t lencnt[MAXBITS+1], lensym[16];       /* lencode memory */
+    static int16_t distcnt[MAXBITS+1], distsym[64];     /* distcode memory */
     static struct huffman litcode = {litcnt, litsym};   /* length code */
     static struct huffman lencode = {lencnt, lensym};   /* length code */
     static struct huffman distcode = {distcnt, distsym};/* distance code */
         /* bit lengths of literal codes */
-    static const unsigned char litlen[] = {
+    static const uint8_t litlen[] = {
         11, 124, 8, 7, 28, 7, 188, 13, 76, 4, 10, 8, 12, 10, 12, 10, 8, 23, 8,
         9, 7, 6, 7, 8, 7, 6, 55, 8, 23, 24, 12, 11, 7, 9, 11, 12, 6, 7, 22, 5,
         7, 24, 6, 11, 9, 6, 7, 22, 7, 11, 38, 7, 9, 8, 25, 11, 8, 11, 9, 12,
@@ -299,10 +305,10 @@ static int decomp(struct state *s)
         44, 253, 253, 253, 252, 252, 252, 13, 12, 45, 12, 45, 12, 61, 12, 45,
         44, 173};
         /* bit lengths of length codes 0..15 */
-    static const unsigned char lenlen[] = {2, 35, 36, 53, 38, 23};
+    static const uint8_t lenlen[] = {2, 35, 36, 53, 38, 23};
         /* bit lengths of distance codes 0..63 */
-    static const unsigned char distlen[] = {2, 20, 53, 230, 247, 151, 248};
-    static const short base[16] = {     /* base for length codes */
+    static const uint8_t distlen[] = {2, 20, 53, 230, 247, 151, 248};
+    static const int16_t base[16] = {     /* base for length codes */
         3, 2, 4, 5, 6, 7, 8, 9, 10, 12, 16, 24, 40, 72, 136, 264};
     static const char extra[16] = {     /* extra bits for length codes */
         0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 3, 4, 5, 6, 7, 8};
@@ -317,30 +323,36 @@ static int decomp(struct state *s)
 
     /* read header */
     lit = bits(s, 8);
+    if (s->error) return 2;
     if (lit > 1) return -1;
     dict = bits(s, 8);
+    if (s->error) return 2;
     if (dict < 4 || dict > 6) return -2;
 
     /* decode literals and length/distance pairs */
     do {
         if (bits(s, 1)) {
+            if (s->error) return 2;
             /* get length */
             symbol = decode(s, &lencode);
+            if (s->error) return 2;
             if (symbol < 0) {
                 return symbol;
             }
 
             len = base[symbol] + bits(s, extra[symbol]);
+            if (s->error) return 2;
             if (len == 519) break;              /* end code */
 
             /* get distance */
             symbol = len == 2 ? 2 : dict;
-            dist = decode(s, &distcode) << symbol;
-            if (dist < 0) {
-                return dist;
-            }
+            int dist_sym = decode(s, &distcode);
+            if (s->error) return 2;
+            if (dist_sym < 0) return dist_sym;
+            dist = dist_sym << symbol;
 
             dist += bits(s, symbol);
+            if (s->error) return 2;
             dist++;
             if (s->first && dist > s->next)
                 return -3;              /* distance too far back */
@@ -369,8 +381,10 @@ static int decomp(struct state *s)
             } while (len != 0);
         }
         else {
+            if (s->error) return 2;
             /* get literal and write it */
             symbol = lit ? decode(s, &litcode) : bits(s, 8);
+            if (s->error) return 2;
             s->out[s->next++] = symbol;
             if (s->next == MAXWIN) {
                 if (s->outfun(s->outhow, s->out, s->next)) return 1;
@@ -394,6 +408,7 @@ int blast(blast_in infun, void *inhow, blast_out outfun, void *outhow)
     s.left = 0;
     s.bitbuf = 0;
     s.bitcnt = 0;
+    s.error = 0;
 
     /* initialize output state */
     s.outfun = outfun;
@@ -401,11 +416,8 @@ int blast(blast_in infun, void *inhow, blast_out outfun, void *outhow)
     s.next = 0;
     s.first = 1;
 
-    /* return if bits() or decode() tries to read past available input */
-    if (setjmp(s.env) != 0)             /* if came back here via longjmp(), */
-        err = 2;                        /*  then skip decomp(), return error */
-    else
-        err = decomp(&s);               /* decompress */
+    /* decompress */
+    err = decomp(&s);
 
     /* write any leftover output and update the error code if needed */
     if (err != 1 && s.next && s.outfun(s.outhow, s.out, s.next) && err == 0)

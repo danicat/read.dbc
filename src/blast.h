@@ -34,9 +34,10 @@
  * fopen(..., "rb") and fopen(..., "wb").
  */
 
+#include <stdint.h>
 
-typedef unsigned (*blast_in)(void *how, unsigned char **buf);
-typedef int (*blast_out)(void *how, unsigned char *buf, unsigned len);
+typedef uint32_t (*blast_in)(void *how, uint8_t **buf);
+typedef int (*blast_out)(void *how, uint8_t *buf, uint32_t len);
 /* Definitions for input/output functions passed to blast().  See below for
  * what the provided functions need to do.
  */
