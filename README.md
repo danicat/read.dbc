@@ -68,7 +68,7 @@ Decompressing a DBC file to a DBF:
         in.f  <- system.file("files/sids.dbc", package = "read.dbc")
         
         # Output file name
-        out.f <- tempfile(fileext = ".dbc")
+        out.f <- tempfile(fileext = ".dbf")
 
         # The call return logi = TRUE on success
         if( dbc2dbf(input.file = in.f, output.file = out.f) ) {

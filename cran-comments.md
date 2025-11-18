@@ -1,32 +1,18 @@
 ## Release information
 
-* Removed broken links
-* Improved error handling in blast.c to prevent runtime errors (fixes gcc-UBSAN)
-* Update DESCRIPTION with collaborators
-* Documentation edits for conciseness
-* Overall doc improvements
+This is a new release (version 1.1.0) to modernize the package and address potential stability issues.
+
+Major changes include:
+* **Thread Safety**: Major C code refactoring to ensure thread safety. Removed static buffers and global state.
+* **Modernization**: Updated C code to use modern `stdint.h` types and replaced legacy `setjmp`/`longjmp` with explicit error codes.
+* **Robustness**: Improved error handling with detailed messages for I/O errors, memory allocation failures, and corrupted files.
+* **Safety**: Replaced Variable Length Arrays (VLAs) with heap allocation to prevent potential stack overflows.
 
 ## R CMD check results
 
-Duration: 28s
+0 errors | 0 warnings | 1 note
 
-❯ checking CRAN incoming feasibility ... [3s/18s] NOTE
-  Maintainer: ‘Daniela Petruzalek <daniela.petruzalek@gmail.com>’
-  
-  New submission
-  
-  Package was archived on CRAN
-  
-  CRAN repository db overrides:
-    X-CRAN-Comment: Archived on 2023-11-20 as issues were not corrected
-      in time.
-
-0 errors ✔ | 0 warnings ✔ | 1 note ✖
-Rscript -e "urlchecker::url_check()"
-✔ All URLs are correct!
-Rscript -e "devtools::check_win_devel()"
-Building windows version of read.dbc (1.0.7)
-ℹ Using R-devel with win-builder.r-project.org.
+* NOTE: "Package was archived on CRAN". This submission is intended to restore the package to CRAN with significant improvements to code quality and safety.
 
 ## revdepcheck results
 

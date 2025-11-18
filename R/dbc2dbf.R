@@ -39,7 +39,7 @@
 #' input  <- system.file("files/sids.dbc", package = "read.dbc")
 #'
 #' # Output file name
-#' output <- tempfile(fileext = ".dbc")
+#' output <- tempfile(fileext = ".dbf")
 #'
 #' # The call returns TRUE on success
 #' if( dbc2dbf(input.file = input, output.file = output) ) {
