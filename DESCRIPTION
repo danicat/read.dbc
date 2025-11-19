@@ -18,6 +18,7 @@ BugReports: https://github.com/danicat/read.dbc/issues
 Copyright: 2016 Daniela Petruzalek
 License: AGPL-3
 Encoding: UTF-8
+Date: 2025-11-19
 LazyData: true
 RoxygenNote: 7.3.2
 Suggests: 

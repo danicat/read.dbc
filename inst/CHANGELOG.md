@@ -1,6 +1,6 @@
 ## CHANGELOG.md
 
-### Version 1.1.0
+### Version 1.1.0 (2025-11-19)
 
 * **Thread Safety**: Major C code refactoring to ensure thread safety. Removed static buffers and global state, making the package safe for concurrent use (e.g., `parallel::mclapply`).
 * **Modernization**: Updated C code to use modern `stdint.h` types and removed legacy `setjmp`/`longjmp` error handling in favor of explicit error codes.
