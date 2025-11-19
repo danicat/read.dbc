@@ -1,3 +1,9 @@
+# read.dbc 1.2.0
+
+* **New Feature**: Added `dbf2dbc()` function to compress standard DBF files into DBC format (Experimental).
+* **Housekeeping**: Removed vignette builder and `knitr`/`rmarkdown` dependencies.
+* **Bug Fix**: Fixed compilation error on systems requiring explicit `stdint.h` inclusion.
+
 # read.dbc 1.1.1
 
 * **Bug Fix**: Fixed a buffer overflow/stack corruption issue when decompressing files with large backward references (e.g., `sids.dbc`). Increased internal buffer size (`MAXWIN`) from 4KB to 16KB and added a safety boundary check to prevent future crashes.

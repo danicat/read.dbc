@@ -1,6 +1,6 @@
-#' Compress a standard DBF file into a DBC file
+#' Compress a standard DBF file into a DBC file (Experimental)
 #'
-#' This function compresses a standard DBF file into a DBC file using the PKWare DCL Implode algorithm.
+#' This function compresses a standard DBF file into a DBC file using the PKWare DCL Implode algorithm. This functionality is experimental and may be subject to change.
 #'
 #' @param input The input DBF file path.
 #' @param output The output DBC file path.

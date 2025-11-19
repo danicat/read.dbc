@@ -1,7 +1,7 @@
 Package: read.dbc
 Title: Read Data Stored in DBC (Compressed DBF) Files
 Description: Functions for reading and decompressing the DBC (compressed DBF) files. Please note that this is the file format used by the Brazilian Ministry of Health (DATASUS) to publish healthcare datasets. It is not related to the FoxPro or CANdb DBC file formats.
-Version: 1.1.1
+Version: 1.2.0
 Author: Daniela Petruzalek [aut, cre, cph], Mark Adler [cph, ctb], Pablo Marcondes Fonseca [cph, ctb]
 Depends:
     R (>= 3.3.0)

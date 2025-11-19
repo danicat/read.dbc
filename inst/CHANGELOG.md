@@ -1,5 +1,11 @@
 ## CHANGELOG.md
 
+### Version 1.2.0 (2025-11-19)
+
+* **New Feature**: Added `dbf2dbc()` function to compress standard DBF files into DBC format (Experimental).
+* **Housekeeping**: Removed vignette builder and `knitr`/`rmarkdown` dependencies to streamline package dependencies.
+* **Bug Fix**: Fixed compilation error on systems requiring explicit `stdint.h` inclusion (e.g., for `uint16_t` in `dbf2dbc.c`).
+
 ### Version 1.1.1 (2025-11-19)
 
 * **Bug Fix**: Fixed a critical buffer overflow/stack corruption issue when decompressing files with large backward references (e.g., `sids.dbc`).

@@ -2,7 +2,7 @@
 % Please edit documentation in R/dbf2dbc.R
 \name{dbf2dbc}
 \alias{dbf2dbc}
-\title{Compress a standard DBF file into a DBC file}
+\title{Compress a standard DBF file into a DBC file (Experimental)}
 \usage{
 dbf2dbc(input, output)
 }
@@ -15,7 +15,7 @@ dbf2dbc(input, output)
 TRUE if successful.
 }
 \description{
-This function compresses a standard DBF file into a DBC file using the PKWare DCL Implode algorithm.
+This function compresses a standard DBF file into a DBC file using the PKWare DCL Implode algorithm. This functionality is experimental and may be subject to change.
 }
 \examples{
 \dontrun{
