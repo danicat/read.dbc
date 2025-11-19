@@ -58,7 +58,7 @@ int blast(blast_in infun, void *inhow, blast_out outfun, void *outhow);
  *
  * The output function is invoked: err = outfun(how, buf, len), where the bytes
  * to be written are buf[0..len-1].  If err is not zero, then blast() returns
- * with an output error.  outfun() is always called with len <= 4096.  outhow
+ * with an output error.  outfun() is always called with len <= 16384.  outhow
  * is for use by the application to pass an output descriptor to outfun(), if
  * desired.
  *

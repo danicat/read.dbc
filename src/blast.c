@@ -32,7 +32,7 @@
 #include "blast.h"              /* prototype for blast() */
 
 #define MAXBITS 13              /* maximum code length */
-#define MAXWIN 4096             /* maximum window size */
+#define MAXWIN 16384            /* maximum window size */
 
 /* input and output state */
 struct state {
@@ -353,7 +353,7 @@ static int decomp(struct state *s)
             dist += bits(s, symbol);
             if (s->error) return 2;
             dist++;
-            if (s->first && dist > s->next)
+            if (dist > MAXWIN || (s->first && dist > s->next))
                 return -3;              /* distance too far back */
 
             /* copy length bytes from distance bytes back */
