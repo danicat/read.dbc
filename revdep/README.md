@@ -18,7 +18,7 @@
 
 |package  |old |new   |Δ  |
 |:--------|:---|:-----|:--|
-|read.dbc |NA  |1.1.0 |*  |
+|read.dbc |NA  |1.1.1 |*  |
 
 # Revdeps
 
