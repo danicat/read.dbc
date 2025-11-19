@@ -198,7 +198,7 @@ int implode(implode_in infun, void *inhow, implode_out outfun, void *outhow) {
     
     /* Hash table for LZ77 */
     uint16_t head[HASH_SIZE];
-    uint16_t prev[MAXWIN]; /* Only track history within the sliding window size */
+    /* uint16_t prev[MAXWIN]; */ /* Unused in brute-force mode */
 
     os.outfun = outfun;
     os.outhow = outhow;
@@ -242,9 +242,9 @@ int implode(implode_in infun, void *inhow, implode_out outfun, void *outhow) {
             unsigned hash = ((p[0]) ^ (p[1] << 4) ^ (p[2] << 5)) & (HASH_SIZE - 1);
             
             /* uint16_t chain_len = 256; */ /* Limit search depth - unused in brute force mode */
-            uint16_t cur_match = head[hash];
+            /* uint16_t cur_match = head[hash]; */
             head[hash] = is.win_pos & (MAXWIN - 1);
-            prev[is.win_pos & (MAXWIN - 1)] = cur_match;
+            /* prev[is.win_pos & (MAXWIN - 1)] = cur_match; */
 
             /* Traverse chain */
             /* Note: This simple hash chain logic needs careful circular buffer handling 
@@ -293,7 +293,7 @@ int implode(implode_in infun, void *inhow, implode_out outfun, void *outhow) {
             int sym = 0;
             int max_val = -1;
             for (int k = 0; k < 16; k++) {
-                if (lenlen[k] != 0 && base[k] <= best_len) {
+                if (lencodes[k].len != 0 && base[k] <= best_len) {
                     if (base[k] > max_val) {
                         max_val = base[k];
                         sym = k;
