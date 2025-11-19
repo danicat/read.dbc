@@ -359,11 +359,13 @@ static int decomp(struct state *s)
             /* copy length bytes from distance bytes back */
             do {
                 to = s->out + s->next;
-                from = to - dist;
-                copy = MAXWIN;
                 if (s->next < dist) {
-                    from += copy;
+                    from = to + (MAXWIN - dist);
                     copy = dist;
+                }
+                else {
+                    from = to - dist;
+                    copy = MAXWIN;
                 }
                 copy -= s->next;
                 if (copy > len) copy = len;
