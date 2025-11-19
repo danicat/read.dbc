@@ -10,3 +10,4 @@ Makefile
 scripts
 ^GEMINI\.md$
 ^system\.md$
+^TODO\.md$
