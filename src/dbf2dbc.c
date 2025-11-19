@@ -5,6 +5,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdint.h>
 #include <R.h>
 #include <Rinternals.h>
 #include "implode.h"
