@@ -22,5 +22,8 @@ Date: 2025-11-19
 LazyData: true
 RoxygenNote: 7.3.2
 Suggests: 
-    testthat (>= 3.0.0) 
+    testthat (>= 3.0.0),
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr
 Config/testthat/edition: 3
