@@ -45,7 +45,7 @@ revdep: ## Reverse dependency checks
 .PHONY: generate
 generate: src/read_dbc_init.c ## Generate C to R interface code
 
-src/read_dbc_init.c: $(SRC)/dbc2dbf.c $(SRC)/blast.c
+src/read_dbc_init.c: $(SRC)/dbc2dbf.c $(SRC)/blast.c $(SRC)/dbf2dbc.c $(SRC)/implode.c
 	Rscript -e 'tools::package_native_routine_registration_skeleton(".")' > src/read_dbc_init.c
 
 .PHONY: setup
