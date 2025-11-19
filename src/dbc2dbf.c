@@ -199,4 +199,3 @@ void dbc2dbf(char** input_file, char** output_file, int* ret_code, char** error_
     cleanup(input, output);
     *ret_code = 0;
 }
-
