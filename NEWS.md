@@ -1,3 +1,7 @@
+# read.dbc 1.1.1
+
+* **Bug Fix**: Fixed a buffer overflow/stack corruption issue when decompressing files with large backward references (e.g., `sids.dbc`). Increased internal buffer size (`MAXWIN`) from 4KB to 16KB and added a safety boundary check to prevent future crashes.
+
 # read.dbc 1.1.0
 
 * **Thread Safety**: Major C code refactoring to ensure thread safety. Removed static buffers and global state.

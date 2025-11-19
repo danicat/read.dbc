@@ -1,5 +1,11 @@
 ## CHANGELOG.md
 
+### Version 1.1.1 (2025-11-19)
+
+* **Bug Fix**: Fixed a critical buffer overflow/stack corruption issue when decompressing files with large backward references (e.g., `sids.dbc`).
+    * Increased internal sliding window buffer (`MAXWIN`) from 4KB to 16KB to support these files.
+    * Added a safety boundary check to explicitly return an error if a file requires a larger buffer, preventing crashes/memory corruption.
+
 ### Version 1.1.0 (2025-11-19)
 
 * **Thread Safety**: Major C code refactoring to ensure thread safety. Removed static buffers and global state, making the package safe for concurrent use (e.g., `parallel::mclapply`).
